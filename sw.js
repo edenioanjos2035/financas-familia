@@ -1,9 +1,23 @@
-const CACHE_NAME = 'financas-v1';
-const FILES = ['./', './index.html', './manifest.json'];
+const CACHE_NAME = 'financas-v2';
+const FILES = [
+  './',
+  './index.html',
+  './dividas.html',
+  './manifest.json'
+];
 
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE_NAME).then(c => c.addAll(FILES))
+  );
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+    )
   );
 });
 
