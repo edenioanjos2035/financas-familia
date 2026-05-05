@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💳 Gestão de Dívidas — Serasa</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);min-height:100vh;color:#e0e0e0;padding-bottom:75px}
+
+.header{background:linear-gradient(90deg,#e94560,#0f3460);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(233,69,96,.4)}
+.header h1{font-size:1.1rem;color:white;display:flex;align-items:center;gap:8px}
+
+.nav{display:flex;background:rgba(0,0,0,.3);overflow-x:auto;border-bottom:1px solid rgba(255,255,255,.08)}
+.nav::-webkit-scrollbar{display:none}
+.nb{flex:0 0 auto;padding:11px 14px;border:none;background:transparent;color:rgba(255,255,255,.5);font-size:.78rem;cursor:pointer;border-bottom:2px solid transparent;font-weight:600;white-space:nowrap;transition:all .2s}
+.nb.on{color:#e94560;border-bottom-color:#e94560;background:rgba(233,69,96,.1)}
+
+.sec{display:none;padding:14px;max-width:800px;margin:0 auto}
+.sec.on{display:block}
+
+/* CARDS TOPO */
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:15px}
+@media(min-width:500px){.cards{grid-template-columns:repeat(4,1fr)}}
+.card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px 10px;text-align:center;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;width:100%;height:3px}
+.c1::before{background:linear-gradient(90deg,#e94560,#ff6b6b)}
+.c2::before{background:linear-gradient(90deg,#f7971e,#ffd200)}
+.c3::before{background:linear-gradient(90deg,#11998e,#38ef7d)}
+.c4::before{background:linear-gradient(90deg,#a18cd1,#fbc2eb)}
+.ci{font-size:1.4rem;margin-bottom:5px}
+.cl{font-size:.62rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.8px}
+.cv{font-size:.95rem;font-weight:800;margin-top:3px}
+.c1 .cv{color:#ff6b6b}.c2 .cv{color:#ffd200}.c3 .cv{color:#38ef7d}.c4 .cv{color:#fbc2eb}
+
+/* BOX */
+.box{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px;margin-bottom:14px}
+.bt{font-size:.92rem;font-weight:700;margin-bottom:12px;padding-bottom:9px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px}
+
+/* FORM */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:9px}
+.fg input,.fg select,.fg textarea{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:white;padding:9px 11px;border-radius:9px;font-size:.83rem;outline:none;width:100%;-webkit-appearance:none;font-family:inherit}
+.fg input::placeholder,.fg textarea::placeholder{color:rgba(255,255,255,.35)}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:rgba(233,69,96,.6)}
+.fg select option{background:#1a1a2e}
+.s2{grid-column:1/-1}
+.btn{width:100%;grid-column:1/-1;border:none;padding:11px;border-radius:9px;font-weight:700;font-size:.88rem;cursor:pointer;transition:all .2s}
+.btn:active{transform:scale(.97);opacity:.85}
+.btn-vermelho{background:linear-gradient(90deg,#e94560,#ff6b6b);color:white}
+.btn-verde{background:linear-gradient(90deg,#11998e,#38ef7d);color:#1a1a2e}
+.btn-azul{background:linear-gradient(90deg,#3a7bd5,#00d2ff);color:white}
+.btn-roxo{background:linear-gradient(90deg,#a18cd1,#fbc2eb);color:#1a1a2e}
+.btn-amarelo{background:linear-gradient(90deg,#f7971e,#ffd200);color:#1a1a2e}
+.btn-sm{padding:5px 10px;font-size:.75rem;border-radius:7px;border:none;cursor:pointer;font-weight:700;transition:all .2s}
+
+/* DÍVIDA CARD */
+.divida-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px;margin-bottom:12px;position:relative;overflow:hidden}
+.divida-card::before{content:'';position:absolute;left:0;top:0;width:4px;height:100%;border-radius:2px 0 0 2px}
+.divida-card.status-atrasado::before{background:#ff6b6b}
+.divida-card.status-negociando::before{background:#ffd200}
+.divida-card.status-parcelado::before{background:#00d2ff}
+.divida-card.status-quitado::before{background:#38ef7d}
+.divida-card.status-proposta::before{background:#fbc2eb}
+
+.divida-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:8px}
+.divida-nome{font-weight:800;font-size:.95rem;flex:1}
+.divida-credor{font-size:.75rem;color:rgba(255,255,255,.5);margin-top:2px}
+
+.status-badge{padding:3px 10px;border-radius:20px;font-size:.68rem;font-weight:700;white-space:nowrap;flex-shrink:0}
+.sb-atrasado{background:rgba(239,68,68,.2);border:1px solid rgba(239,68,68,.4);color:#fca5a5}
+.sb-negociando{background:rgba(234,179,8,.2);border:1px solid rgba(234,179,8,.4);color:#fde047}
+.sb-parcelado{background:rgba(0,210,255,.2);border:1px solid rgba(0,210,255,.4);color:#00d2ff}
+.sb-quitado{background:rgba(56,239,125,.2);border:1px solid rgba(56,239,125,.4);color:#38ef7d}
+.sb-proposta{background:rgba(251,194,235,.2);border:1px solid rgba(251,194,235,.4);color:#fbc2eb}
+
+.divida-valores{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.dv-item{background:rgba(255,255,255,.04);border-radius:8px;padding:8px;text-align:center}
+.dv-label{font-size:.62rem;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.5px}
+.dv-val{font-size:.88rem;font-weight:700;margin-top:3px}
+
+/* PROGRESSO */
+.prog-wrap{margin-bottom:10px}
+.prog-label{display:flex;justify-content:space-between;font-size:.72rem;color:rgba(255,255,255,.5);margin-bottom:4px}
+.pb{height:8px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden}
+.pf{height:100%;border-radius:4px;transition:width .5s}
+.p-red{background:linear-gradient(90deg,#e94560,#ff6b6b)}
+.p-yellow{background:linear-gradient(90deg,#f7971e,#ffd200)}
+.p-blue{background:linear-gradient(90deg,#3a7bd5,#00d2ff)}
+.p-green{background:linear-gradient(90deg,#11998e,#38ef7d)}
+
+/* PROPOSTAS */
+.proposta-item{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:9px;padding:10px;margin-bottom:8px;position:relative}
+.proposta-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.proposta-tipo{font-size:.78rem;font-weight:700}
+.proposta-status{font-size:.68rem;padding:2px 8px;border-radius:10px;font-weight:700}
+.ps-pendente{background:rgba(234,179,8,.2);color:#fde047}
+.ps-aceita{background:rgba(56,239,125,.2);color:#38ef7d}
+.ps-recusada{background:rgba(239,68,68,.2);color:#fca5a5}
+.ps-em-analise{background:rgba(0,210,255,.2);color:#00d2ff}
+
+.proposta-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;font-size:.75rem}
+.pg-item{background:rgba(255,255,255,.03);padding:6px 8px;border-radius:7px}
+.pg-l{color:rgba(255,255,255,.4);font-size:.65rem;text-transform:uppercase}
+.pg-v{font-weight:700;margin-top:2px}
+
+/* PARCELAS */
+.parcela-item{display:flex;justify-content:space-between;align-items:center;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,.05);font-size:.8rem}
+.parcela-item.paga{opacity:.5}
+.parc-num{color:rgba(255,255,255,.5);font-size:.72rem;width:30px;flex-shrink:0}
+.parc-data{color:rgba(255,255,255,.6);font-size:.72rem}
+.parc-val{font-weight:700;color:#ff6b6b}
+.parc-val.pago{color:#38ef7d}
+.chk-parc{width:22px;height:22px;border-radius:6px;border:2px solid rgba(255,255,255,.2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.chk-parc.on{background:linear-gradient(135deg,#11998e,#38ef7d);border-color:#38ef7d}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:300;align-items:flex-end;backdrop-filter:blur(4px)}
+.modal-overlay.open{display:flex}
+.modal{background:#16213e;border-radius:20px 20px 0 0;padding:20px;width:100%;max-height:92vh;overflow-y:auto;animation:slideUp .3s ease;border-top:1px solid rgba(255,255,255,.1)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:40px;height:4px;background:rgba(255,255,255,.2);border-radius:2px;margin:0 auto 15px}
+.modal-title{font-size:1rem;font-weight:700;margin-bottom:15px;text-align:center}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:20px}
+.timeline::before{content:'';position:absolute;left:7px;top:0;bottom:0;width:2px;background:rgba(255,255,255,.1)}
+.tl-item{position:relative;margin-bottom:14px;padding-left:16px}
+.tl-dot{position:absolute;left:-20px;top:3px;width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.tl-data{font-size:.7rem;color:rgba(255,255,255,.4);margin-bottom:2px}
+.tl-texto{font-size:.82rem}
+
+/* NOTIF */
+.notif{position:fixed;top:65px;left:50%;transform:translateX(-50%);padding:10px 18px;border-radius:9px;font-weight:700;font-size:.83rem;z-index:9999;animation:sIn .3s ease;white-space:nowrap;box-shadow:0 5px 20px rgba(0,0,0,.3)}
+.nok{background:linear-gradient(135deg,#11998e,#38ef7d);color:#1a1a2e}
+.nerr{background:linear-gradient(135deg,#e94560,#ff6b6b);color:white}
+.ninfo{background:linear-gradient(135deg,#3a7bd5,#00d2ff);color:white}
+@keyframes sIn{from{transform:translateX(-50%) translateY(-15px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
+
+.vazio{text-align:center;color:rgba(255,255,255,.25);padding:25px;font-size:.82rem}
+.del{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#fca5a5;padding:4px 8px;border-radius:6px;cursor:pointer;font-size:.72rem}
+.sep{height:1px;background:rgba(255,255,255,.07);margin:12px 0}
+
+/* SCORE VISUAL */
+.score-wrap{display:flex;align-items:center;gap:15px;padding:15px;background:rgba(255,255,255,.04);border-radius:12px;margin-bottom:12px}
+.score-circle{width:70px;height:70px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;flex-shrink:0;font-weight:900;font-size:1.1rem}
+.score-info{flex:1}
+.score-titulo{font-weight:700;font-size:.9rem;margin-bottom:3px}
+.score-sub{font-size:.75rem;color:rgba(255,255,255,.5);line-height:1.5}
+
+/* DICA BOX */
+.dica{background:rgba(255,215,0,.07);border:1px solid rgba(255,215,0,.2);border-radius:10px;padding:12px;margin-bottom:10px;font-size:.82rem;line-height:1.6;display:flex;gap:10px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>💳 Gestão de Dívidas & Negociação</h1>
+</div>
+
+<div class="nav">
+  <button class="nb on" onclick="ir('resumo',this)">📊 Resumo</button>
+  <button class="nb" onclick="ir('dividas',this)">💳 Dívidas</button>
+  <button class="nb" onclick="ir('propostas',this)">🤝 Propostas</button>
+  <button class="nb" onclick="ir('parcelas',this)">📅 Parcelas</button>
+  <button class="nb" onclick="ir('plano',this)">🗺️ Plano</button>
+  <button class="nb" onclick="ir('dicas',this)">💡 Dicas</button>
+</div>
+
+<!-- ═══════ RESUMO ═══════ -->
+<div class="sec on" id="s-resumo">
+
+  <div class="cards" style="margin-top:14px">
+    <div class="card c1">
+      <div class="ci">💳</div>
+      <div class="cl">Total Dívidas</div>
+      <div class="cv" id="card-total">R$ 0</div>
+    </div>
+    <div class="card c2">
+      <div class="ci">⏳</div>
+      <div class="cl">Em Aberto</div>
+      <div class="cv" id="card-aberto">R$ 0</div>
+    </div>
+    <div class="card c3">
+      <div class="ci">✅</div>
+      <div class="cl">Quitado</div>
+      <div class="cv" id="card-quitado">R$ 0</div>
+    </div>
+    <div class="card c4">
+      <div class="ci">🤝</div>
+      <div class="cl">Negociando</div>
+      <div class="cv" id="card-neg">0</div>
+    </div>
+  </div>
+
+  <!-- PROGRESSO GERAL -->
+  <div class="box">
+    <div class="bt">📈 Progresso de Quitação</div>
+    <div class="prog-wrap">
+      <div class="prog-label">
+        <span>Dívidas Quitadas</span>
+        <span id="prog-pct">0%</span>
+      </div>
+      <div class="pb" style="height:12px">
+        <div class="pf p-green" id="prog-bar" style="width:0%"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:.72rem;color:rgba(255,255,255,.4);margin-top:5px">
+        <span id="prog-quitado">Quitado: R$ 0</span>
+        <span id="prog-total">Total: R$ 0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCORE SERASA -->
+  <div class="box">
+    <div class="bt">📊 Score de Recuperação</div>
+    <div class="score-wrap" id="score-wrap">
+      <div class="score-circle" id="score-circle"
+        style="background:linear-gradient(135deg,#e94560,#ff6b6b);color:white">
+        <span id="score-val">—</span>
+        <span style="font-size:.5rem;font-weight:400">pontos</span>
+      </div>
+      <div class="score-info">
+        <div class="score-titulo" id="score-titulo">Configure seu score</div>
+        <div class="score-sub" id="score-sub">Adicione seu score atual do Serasa para acompanhar a evolução</div>
+      </div>
+    </div>
+    <div class="fg">
+      <input type="number" id="inp-score" placeholder="Seu score atual (0-1000)" class="s2" min="0" max="1000">
+      <input type="date" id="inp-score-data">
+      <input type="text" id="inp-score-obs" placeholder="Observação (ex: após quitação)">
+      <button class="btn btn-azul" onclick="addScore()">📊 Registrar Score</button>
+    </div>
+    <div id="historico-score"></div>
+  </div>
+
+  <!-- RESUMO POR CREDOR -->
+  <div class="box">
+    <div class="bt">🏦 Resumo por Credor</div>
+    <div id="resumo-credor"></div>
+  </div>
+
+  <!-- PRÓXIMAS PARCELAS -->
+  <div class="box">
+    <div class="bt">📅 Próximos Vencimentos</div>
+    <div id="proximos-venc"></div>
+  </div>
+</div>
+
+<!-- ═══════ DÍVIDAS ═══════ -->
+<div class="sec" id="s-dividas">
+
+  <!-- FORMULÁRIO NOVA DÍVIDA -->
+  <div class="box" style="margin-top:14px">
+    <div class="bt">➕ Cadastrar Nova Dívida</div>
+    <div class="fg">
+      <input id="d-nome" placeholder="Nome da dívida (ex: Cartão Nubank)" class="s2">
+      <input id="d-credor" placeholder="Credor / Banco / Empresa">
+      <input id="d-cpf-cnpj" placeholder="CPF/CNPJ do credor (opcional)">
+      <input id="d-valor-orig" type="number" placeholder="Valor original R$" step="0.01" inputmode="decimal">
+      <input id="d-valor-atual" type="number" placeholder="Valor atual com juros R$" step="0.01" inputmode="decimal">
+      <input id="d-venc-orig" type="date" placeholder="Data vencimento original">
+      <select id="d-tipo">
+        <option value="cartao">💳 Cartão de Crédito</option>
+        <option value="emprestimo">💰 Empréstimo</option>
+        <option value="financiamento">🏠 Financiamento</option>
+        <option value="conta">📄 Conta em Atraso</option>
+        <option value="cheque">📋 Cheque Especial</option>
+        <option value="serasa">🔴 Serasa/SPC</option>
+        <option value="outros">📦 Outros</option>
+      </select>
+      <select id="d-status">
+        <option value="atrasado">🔴 Em Atraso</option>
+        <option value="negociando">🟡 Negociando</option>
+        <option value="proposta">🟣 Proposta Enviada</option>
+        <option value="parcelado">🔵 Parcelado</option>
+        <option value="quitado">🟢 Quitado</option>
+      </select>
+      <input id="d-dias-atraso" type="number" placeholder="Dias em atraso" class="s2">
+      <textarea id="d-obs" placeholder="Observações (ex: já tentei negociar em Jan/2024...)" rows="2" class="s2" style="resize:none"></textarea>
+      <button class="btn btn-vermelho" onclick="addDivida()">💳 Cadastrar Dívida</button>
+    </div>
+  </div>
+
+  <!-- FILTROS -->
+  <div style="display:flex;gap:7px;overflow-x:auto;margin-bottom:12px;padding-bottom:3px">
+    <button class="btn-sm on" id="fil-todos" onclick="setFilDiv('todos',this)"
+      style="background:rgba(233,69,96,.2);border:1px solid #e94560;color:#ff6b6b">Todas</button>
+    <button class="btn-sm" id="fil-atrasado" onclick="setFilDiv('atrasado',this)"
+      style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6)">🔴 Atrasado</button>
+    <button class="btn-sm" id="fil-negociando" onclick="setFilDiv('negociando',this)"
+      style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6)">🟡 Negociando</button>
+    <button class="btn-sm" id="fil-parcelado" onclick="setFilDiv('parcelado',this)"
+      style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6)">🔵 Parcelado</button>
+    <button class="btn-sm" id="fil-quitado" onclick="setFilDiv('quitado',this)"
+      style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6)">🟢 Quitado</button>
+  </div>
+
+  <div id="lista-dividas"></div>
+</div>
+
+<!-- ═══════ PROPOSTAS ═══════ -->
+<div class="sec" id="s-propostas">
+  <div class="box" style="margin-top:14px">
+    <div class="bt">🤝 Nova Proposta de Negociação</div>
+    <div class="fg">
+      <select id="p-divida" class="s2">
+        <option value="">Selecione a dívida...</option>
+      </select>
+      <select id="p-tipo" class="s2">
+        <option value="vista">💵 Pagamento à Vista</option>
+        <option value="parcelado">📅 Parcelamento</option>
+        <option value="desconto">🏷️ Desconto + Parcelamento</option>
+        <option value="acordo">🤝 Acordo Especial</option>
+        <option value="feirão">🎪 Feirão Serasa/Acordo Certo</option>
+      </select>
+      <input id="p-valor-prop" type="number" placeholder="Valor proposto R$" step="0.01" inputmode="decimal">
+      <input id="p-entrada" type="number" placeholder="Entrada R$ (se houver)" step="0.01" inputmode="decimal">
+      <input id="p-parcelas" type="number" placeholder="Nº de parcelas" min="1">
+      <input id="p-valor-parc" type="number" placeholder="Valor da parcela R$" step="0.01" inputmode="decimal">
+      <input id="p-desconto" type="number" placeholder="Desconto conseguido %" min="0" max="100">
+      <input id="p-data-prop" type="date">
+      <input id="p-validade" type="date" placeholder="Válida até">
+      <select id="p-status" class="s2">
+        <option value="pendente">⏳ Aguardando Resposta</option>
+        <option value="em-analise">🔍 Em Análise</option>
+        <option value="aceita">✅ Aceita / Aprovada</option>
+        <option value="recusada">❌ Recusada</option>
+      </select>
+      <input id="p-contato" placeholder="Contato / Atendente / Protocolo" class="s2">
+      <textarea id="p-obs-prop" placeholder="Detalhes da negociação, condições especiais..." rows="2" class="s2" style="resize:none"></textarea>
+      <button class="btn btn-roxo" onclick="addProposta()">🤝 Registrar Proposta</button>
+    </div>
+  </div>
+  <div id="lista-propostas"></div>
+</div>
+
+<!-- ═══════ PARCELAS ═══════ -->
+<div class="sec" id="s-parcelas">
+  <div class="box" style="margin-top:14px">
+    <div class="bt">📅 Controle de Parcelas</div>
+    <div style="font-size:.82rem;color:rgba(255,255,255,.5);margin-bottom:12px">
+      Marque as parcelas pagas conforme for quitando. O saldo é atualizado automaticamente.
+    </div>
+    <div id="lista-parcelas-ctrl"></div>
+  </div>
+</div>
+
+<!-- ═══════ PLANO ═══════ -->
+<div class="sec" id="s-plano">
+  <div class="box" style="margin-top:14px">
+    <div class="bt">🗺️ Plano de Quitação</div>
+
+    <div class="fg" style="margin-bottom:14px">
+      <input id="plano-renda" type="number" placeholder="Renda disponível p/ dívidas R$/mês" class="s2" inputmode="decimal">
+      <select id="plano-metodo" class="s2">
+        <option value="avalanche">🌊 Método Avalanche (maior juros primeiro)</option>
+        <option value="bola-neve">⛄ Método Bola de Neve (menor dívida primeiro)</option>
+        <option value="proporcional">⚖️ Proporcional (dividir igualmente)</option>
+      </select>
+      <button class="btn btn-amarelo" onclick="gerarPlano()">🗺️ Gerar Plano de Quitação</button>
+    </div>
+
+    <div id="plano-resultado"></div>
+  </div>
+
+  <!-- SIMULADOR DESCONTO -->
+  <div class="box">
+    <div class="bt">🧮 Simulador de Desconto</div>
+    <div class="fg">
+      <select id="sim-divida" class="s2">
+        <option value="">Selecione a dívida...</option>
+      </select>
+      <input id="sim-desconto" type="number" placeholder="Desconto oferecido %" min="0" max="100">
+      <input id="sim-parcelas" type="number" placeholder="Nº parcelas">
+      <input id="sim-entrada" type="number" placeholder="Entrada R$" step="0.01" inputmode="decimal">
+      <button class="btn btn-azul" onclick="simularDesconto()">🧮 Simular</button>
+    </div>
+    <div id="sim-resultado"></div>
+  </div>
+</div>
+
+<!-- ═══════ DICAS ═══════ -->
+<div class="sec" id="s-dicas">
+  <div class="box" style="margin-top:14px">
+    <div class="bt">💡 Dicas para Negociar com Serasa</div>
+
+    <div class="dica">
+      <span style="font-size:1.2rem;flex-shrink:0">🎪</span>
+      <div><strong>Feirão Limpa Nome</strong><br>O Serasa realiza feirões com descontos de até 99%! Acesse serasa.com.br/limpa-nome ou o app Serasa para ver ofertas disponíveis para seu CPF.</div>
+    </div>
+
+    <div class="dica">
+      <span style="font-size:1.2rem;flex-shrink:0">📞</span>
+      <div><strong>Negocie Diretamente com o Credor</strong><br>Antes de pagar o Serasa, tente negociar diretamente com a empresa. Muitas vezes o desconto é maior e sem intermediários.</div>
+    </div>
+
+    <div class="dica">
+      <span style="font-size:1.2rem;flex-shrink:0">⚖️</span>
+      <div><strong>Prescrição de Dívidas</strong><br>Dívidas prescrevem em 5 anos (maioria). Após isso não podem ser cobradas judicialmente. Verifique a data de vencimento original.</div>
+    </div>
+
+    <div class="dica">
+      <span style="font-size:1.2rem;flex-shrink:0">🔢</span>
+      <div><strong>Priorize por Juros</strong><br>Cartão de crédito: ~400% ao ano. Cheque especial: ~150% ao ano. Quite as de juros maiores primeiro para economizar mais.</div>
+    </div>
+
+    <div class="dica">
+      <span style="font-size:1.2rem;flex-shrink:0">📱</span>
+      <div><strong>Apps para Negociar</strong><br>• Serasa — serasa.com.br<br>• Acordo Certo — acordocerto.com.br<br>• Quero Quitar — queroquitar.com.br<br>• Meu Acerto — meuacerto.com.br</div>
+    </div>
+
+    <div class="dica">
+      <span style="font-size:1.2rem;flex-shrink:0">📋</span>
+      <div><strong>Guarde Comprovantes</strong><br>Sempre exija comprovante de quitação e guarde por pelo menos 5 anos. Após pagar, o nome deve sair do Serasa em até 5 dias úteis.</div>
+    </div>
+
+    <div class="dica">
+      <span style="font-size:1.2rem;flex-shrink:0">💰</span>
+      <div><strong>Oferta Inicial Baixa</strong><br>Comece oferecendo 30-40% do valor. O credor provavelmente vai recusar, mas serve como base para negociar. Nunca aceite a primeira oferta!</div>
+    </div>
+
+    <div class="dica">
+      <span style="font-size:1.2rem;flex-shrink:0">📅</span>
+      <div><strong>Melhor Época para Negociar</strong><br>Final de trimestre e dezembro são ótimas épocas. As empresas querem fechar metas e aceitam descontos maiores.</div>
+    </div>
+  </div>
+
+  <!-- CHECKLIST NEGOCIAÇÃO -->
+  <div class="box">
+    <div class="bt">✅ Checklist de Negociação</div>
+    <div id="checklist"></div>
+  </div>
+</div>
+
+<!-- MODAL DETALHES DÍVIDA -->
+<div class="modal-overlay" id="modal-divida">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-titulo">Detalhes da Dívida</div>
+    <div id="modal-conteudo"></div>
+    <button class="btn" style="background:rgba(255,255,255,.1);color:white;margin-top:10px" onclick="fecharModal()">✕ Fechar</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  ESTADO
+// ══════════════════════════════════════════════
+let bd={
+  dividas:[],
+  propostas:[],
+  scores:[],
+  parcelasPagas:{},  // chave: "dividaId-propostaId-numParcela"
+  checklist:{}
+};
+
+let filDiv='todos';
+
+const CHECKLIST_ITEMS=[
+  {id:'c1',texto:'Levantei todas as dívidas e valores atualizados'},
+  {id:'c2',texto:'Verifiquei dívidas no Serasa (serasa.com.br)'},
+  {id:'c3',texto:'Consultei o Feirão Limpa Nome'},
+  {id:'c4',texto:'Verifiquei datas de prescrição'},
+  {id:'c5',texto:'Priorizei as dívidas por juros'},
+  {id:'c6',texto:'Separei valor disponível para negociação'},
+  {id:'c7',texto:'Entrei em contato com o credor'},
+  {id:'c8',texto:'Registrei protocolo de atendimento'},
+  {id:'c9',texto:'Obtive proposta por escrito/e-mail'},
+  {id:'c10',texto:'Guardei comprovante de pagamento'},
+  {id:'c11',texto:'Confirmei retirada do nome do Serasa'}
+];
+
+const TIPO_LABELS={
+  cartao:'💳 Cartão de Crédito',emprestimo:'💰 Empréstimo',
+  financiamento:'🏠 Financiamento',conta:'📄 Conta em Atraso',
+  cheque:'📋 Cheque Especial',serasa:'🔴 Serasa/SPC',outros:'📦 Outros'
+};
+
+const STATUS_LABELS={
+  atrasado:'🔴 Em Atraso',negociando:'🟡 Negociando',
+  proposta:'🟣 Proposta Enviada',parcelado:'🔵 Parcelado',quitado:'🟢 Quitado'
+};
+
+const PROP_STATUS={
+  pendente:'⏳ Aguardando',
+  'em-analise':'🔍 Em Análise',
+  aceita:'✅ Aceita',
+  recusada:'❌ Recusada'
+};
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+window.onload=()=>{
+  carregarBD();
+  renderChecklist();
+  renderTudo();
+  // Data padrão
+  const hj=new Date().toISOString().split('T')[0];
+  document.getElementById('p-data-prop').value=hj;
+  document.getElementById('inp-score-data').value=hj;
+};
+
+// ══════════════════════════════════════════════
+//  SALVAR / CARREGAR
+// ══════════════════════════════════════════════
+function salvarBD(){localStorage.setItem('ff_dividas',JSON.stringify(bd));}
+function carregarBD(){
+  const r=localStorage.getItem('ff_dividas');
+  if(r){
+    const s=JSON.parse(r);
+    bd.dividas=s.dividas||[];
+    bd.propostas=s.propostas||[];
+    bd.scores=s.scores||[];
+    bd.parcelasPagas=s.parcelasPagas||{};
+    bd.checklist=s.checklist||{};
+  }
+}
+
+// ══════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════
+function fmt(v){return(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function v(id){const e=document.getElementById(id);return e?e.value:'';}
+function sv(id,val){const e=document.getElementById(id);if(e)e.value=val;}
+function set(id,val){const e=document.getElementById(id);if(e)e.textContent=val;}
+
+function statusBadgeClass(s){
+  return{atrasado:'sb-atrasado',negociando:'sb-negociando',
+    proposta:'sb-proposta',parcelado:'sb-parcelado',quitado:'sb-quitado'}[s]||'sb-atrasado';
+}
+
+// ══════════════════════════════════════════════
+//  ADICIONAR DÍVIDA
+// ══════════════════════════════════════════════
+function addDivida(){
+  const nome=v('d-nome').trim();
+  const valOrig=parseFloat(v('d-valor-orig'));
+  const valAtual=parseFloat(v('d-valor-atual'))||valOrig;
+
+  if(!nome||isNaN(valOrig)||valOrig<=0){
+    notif('Preencha nome e valor original!','err');return;
+  }
+
+  const item={
+    id:'div'+Date.now(),
+    nome,
+    credor:v('d-credor'),
+    cpfCnpj:v('d-cpf-cnpj'),
+    valorOriginal:valOrig,
+    valorAtual:valAtual,
+    vencOriginal:v('d-venc-orig'),
+    tipo:v('d-tipo'),
+    status:v('d-status'),
+    diasAtraso:parseInt(v('d-dias-atraso'))||0,
+    obs:v('d-obs'),
+    dataCadastro:new Date().toISOString().split('T')[0],
+    ts:Date.now()
+  };
+
+  bd.dividas.push(item);
+  salvarBD();
+
+  // Limpar form
+  ['d-nome','d-credor','d-cpf-cnpj','d-valor-orig','d-valor-atual',
+   'd-venc-orig','d-dias-atraso','d-obs'].forEach(id=>sv(id,''));
+
+  renderTudo();
+  notif('💳 Dívida cadastrada!','ok');
+}
+
+// ══════════════════════════════════════════════
+//  EDITAR STATUS DÍVIDA
+// ══════════════════════════════════════════════
+function editarStatus(id,novoStatus){
+  const d=bd.dividas.find(x=>x.id===id);
+  if(d){
+    d.status=novoStatus;
+    salvarBD();renderTudo();
+    notif('✅ Status atualizado!','ok');
+  }
+}
+
+function delDivida(id){
+  if(!confirm('Remover esta dívida?')) return;
+  bd.dividas=bd.dividas.filter(d=>d.id!==id);
+  bd.propostas=bd.propostas.filter(p=>p.dividaId!==id);
+  salvarBD();renderTudo();notif('🗑️ Removida!','ok');
+}
+
+// ══════════════════════════════════════════════
+//  ADICIONAR PROPOSTA
+// ══════════════════════════════════════════════
+function addProposta(){
+  const dividaId=v('p-divida');
+  const valorProp=parseFloat(v('p-valor-prop'));
+  if(!dividaId){notif('Selecione a dívida!','err');return;}
+  if(isNaN(valorProp)||valorProp<=0){notif('Informe o valor proposto!','err');return;}
+
+  const nParcelas=parseInt(v('p-parcelas'))||1;
+  const valParc=parseFloat(v('p-valor-parc'))||(valorProp/nParcelas);
+
+  // Gerar array de parcelas
+  const parcelas=[];
+  const dataBase=v('p-data-prop')?new Date(v('p-data-prop')+'T12:00'):new Date();
+  for(let i=0;i<nParcelas;i++){
+    const dt=new Date(dataBase);
+    dt.setMonth(dt.getMonth()+i+1);
+    parcelas.push({
+      num:i+1,
+      valor:i===0?parseFloat(v('p-entrada'))||valParc:valParc,
+      vencimento:dt.toISOString().split('T')[0]
+    });
+  }
+
+  const item={
+    id:'prop'+Date.now(),
+    dividaId,
+    tipo:v('p-tipo'),
+    valorProposto:valorProp,
+    entrada:parseFloat(v('p-entrada'))||0,
+    nParcelas,
+    valorParcela:valParc,
+    desconto:parseFloat(v('p-desconto'))||0,
+    dataProposta:v('p-data-prop'),
+    validadeAte:v('p-validade'),
+    status:v('p-status'),
+    contato:v('p-contato'),
+    obs:v('p-obs-prop'),
+    parcelas,
+    ts:Date.now()
+  };
+
+  bd.propostas.push(item);
+
+  // Atualizar status da dívida
+  const div=bd.dividas.find(d=>d.id===dividaId);
+  if(div&&item.status==='aceita') div.status='parcelado';
+  else if(div&&div.status==='atrasado') div.status='negociando';
+
+  salvarBD();
+  ['p-valor-prop','p-entrada','p-parcelas','p-valor-parc',
+   'p-desconto','p-validade','p-contato','p-obs-prop'].forEach(id=>sv(id,''));
+
+  renderTudo();
+  notif('🤝 Proposta registrada!','ok');
+}
+
+function delProposta(id){
+  if(!confirm('Remover esta proposta?')) return;
+  bd.propostas=bd.propostas.filter(p=>p.id!==id);
+  salvarBD();renderTudo();notif('🗑️ Removida!','ok');
+}
+
+function editarStatusProp(id,novoStatus){
+  const p=bd.propostas.find(x=>x.id===id);
+  if(p){
+    p.status=novoStatus;
+    // Se aceita, atualizar status da dívida
+    if(novoStatus==='aceita'){
+      const div=bd.dividas.find(d=>d.id===p.dividaId);
+      if(div) div.status='parcelado';
+    }
+    salvarBD();renderTudo();
+    notif('✅ Status da proposta atualizado!','ok');
+  }
+}
+
+// ══════════════════════════════════════════════
+//  PARCELAS — MARCAR COMO PAGA
+// ══════════════════════════════════════════════
+function toggleParcela(propId,numParc,valor){
+  const ch=`${propId}-${numParc}`;
+  const atual=bd.parcelasPagas[ch];
+  if(atual){
+    delete bd.parcelasPagas[ch];
+    notif('↩️ Parcela desmarcada!','info');
+  } else {
+    bd.parcelasPagas[ch]={pago:true,dataPag:new Date().toISOString().split('T')[0],valor};
+    notif('✅ Parcela paga! R$ '+fmt(valor)+' quitado','ok');
+  }
+
+  // Verificar se todas as parcelas foram pagas
+  const prop=bd.propostas.find(p=>p.id===propId);
+  if(prop){
+    const totalPagas=prop.parcelas.filter(p=>bd.parcelasPagas[`${propId}-${p.num}`]).length;
+    if(totalPagas===prop.parcelas.length){
+      const div=bd.dividas.find(d=>d.id===prop.dividaId);
+      if(div&&div.status!=='quitado'){
+        div.status='quitado';
+        notif('🏆 PARABÉNS! Dívida QUITADA!','ok');
+      }
+    }
+  }
+
+  salvarBD();renderTudo();
+}
+
+// ══════════════════════════════════════════════
+//  SCORE
+// ══════════════════════════════════════════════
+function addScore(){
+  const val=parseInt(v('inp-score'));
+  const data=v('inp-score-data');
+  const obs=v('inp-score-obs');
+  if(isNaN(val)||val<0||val>1000){notif('Score deve ser entre 0 e 1000!','err');return;}
+  bd.scores.push({val,data,obs,ts:Date.now()});
+  salvarBD();
+  sv('inp-score','');sv('inp-score-obs','');
+  renderResumo();notif('📊 Score registrado!','ok');
+}
+
+// ══════════════════════════════════════════════
+//  RENDER TUDO
+// ══════════════════════════════════════════════
+function renderTudo(){
+  renderResumo();
+  renderDividas();
+  renderPropostas();
+  renderParcelas();
+  atualizarSelects();
+}
+
+// ══════════════════════════════════════════════
+//  RENDER RESUMO
+// ══════════════════════════════════════════════
+function renderResumo(){
+  const divs=bd.dividas;
+  const totalGeral=divs.reduce((s,d)=>s+d.valorAtual,0);
+  const totalQuit=divs.filter(d=>d.status==='quitado').reduce((s,d)=>s+d.valorAtual,0);
+  const totalAberto=divs.filter(d=>d.status!=='quitado').reduce((s,d)=>s+d.valorAtual,0);
+  const emNeg=divs.filter(d=>['negociando','proposta','parcelado'].includes(d.status)).length;
+
+  set('card-total','R$ '+fmt(totalGeral));
+  set('card-aberto','R$ '+fmt(totalAberto));
+  set('card-quitado','R$ '+fmt(totalQuit));
+  set('card-neg',emNeg);
+
+  const pct=totalGeral>0?(totalQuit/totalGeral)*100:0;
+  const pb=document.getElementById('prog-bar');
+  if(pb) pb.style.width=pct.toFixed(1)+'%';
+  set('prog-pct',pct.toFixed(1)+'%');
+  set('prog-quitado','Quitado: R$ '+fmt(totalQuit));
+  set('prog-total','Total: R$ '+fmt(totalGeral));
+
+  // Score
+  renderScoreAtual();
+
+  // Resumo por credor
+  const credores={};
+  divs.forEach(d=>{
+    const c=d.credor||'Sem credor';
+    if(!credores[c]) credores[c]={total:0,qtd:0,quitado:0};
+    credores[c].total+=d.valorAtual;
+    credores[c].qtd++;
+    if(d.status==='quitado') credores[c].quitado+=d.valorAtual;
+  });
+
+  const rcEl=document.getElementById('resumo-credor');
+  if(rcEl){
+    rcEl.innerHTML=Object.entries(credores).length
+      ?Object.entries(credores).map(([c,info])=>`
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.83rem">
+          <div>
+            <div style="font-weight:600">${c}</div>
+            <div style="font-size:.72rem;color:rgba(255,255,255,.4)">${info.qtd} dívida(s)</div>
+          </div>
+          <div style="text-align:right">
+            <div style="color:#ff6b6b;font-weight:700">R$ ${fmt(info.total)}</div>
+            ${info.quitado>0?`<div style="color:#38ef7d;font-size:.72rem">✅ R$ ${fmt(info.quitado)} quitado</div>`:''}
+          </div>
+        </div>`).join('')
+      :'<div class="vazio">Nenhuma dívida cadastrada</div>';
+  }
+
+  // Próximos vencimentos
+  renderProxVenc();
+}
+
+function renderScoreAtual(){
+  if(!bd.scores.length) return;
+  const ultimo=bd.scores[bd.scores.length-1];
+  const sc=document.getElementById('score-circle');
+  const st=document.getElementById('score-titulo');
+  const ss=document.getElementById('score-sub');
+  set('score-val',ultimo.val);
+
+  let cor,titulo,sub;
+  if(ultimo.val>=800){cor='linear-gradient(135deg,#11998e,#38ef7d)';titulo='🏆 Excelente';sub='Seu score é excelente! Ótimas condições de crédito.';}
+  else if(ultimo.val>=660){cor='linear-gradient(135deg,#3a7bd5,#00d2ff)';titulo='👍 Bom';sub='Score bom. Condições razoáveis de crédito.';}
+  else if(ultimo.val>=500){cor='linear-gradient(135deg,#f7971e,#ffd200)';titulo='⚠️ Regular';sub='Score regular. Trabalhe para aumentar quitando dívidas.';}
+  else if(ultimo.val>=300){cor='linear-gradient(135deg,#e94560,#ff6b6b)';titulo='❌ Ruim';sub='Score ruim. Priorize quitar dívidas do Serasa.';}
+  else{cor='linear-gradient(135deg,#7f1d1d,#e94560)';titulo='🚨 Muito Ruim';titulo='Muito Ruim';sub='Score crítico. Negocie urgente suas dívidas.';}
+
+  if(sc){sc.style.background=cor;}
+  if(st) st.textContent=titulo;
+  if(ss) ss.textContent=sub;
+
+  // Histórico
+  const hEl=document.getElementById('historico-score');
+  if(hEl&&bd.scores.length>1){
+    hEl.innerHTML=`<div style="margin-top:10px"><div style="font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:6px">Histórico de score:</div>`
+    +bd.scores.slice().reverse().slice(0,5).map(s=>`
+      <div style="display:flex;justify-content:space-between;font-size:.78rem;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05)">
+        <span style="color:rgba(255,255,255,.5)">${s.data} ${s.obs?'— '+s.obs:''}</span>
+        <span style="font-weight:700;color:${s.val>=660?'#38ef7d':s.val>=500?'#ffd200':'#ff6b6b'}">${s.val} pts</span>
+      </div>`).join('')+'</div>';
+  }
+}
+
+function renderProxVenc(){
+  const el=document.getElementById('proximos-venc');
+  if(!el) return;
+
+  const hoje=new Date();
+  const prox=[];
+
+  bd.propostas.forEach(p=>{
+    if(p.status!=='aceita') return;
+    const div=bd.dividas.find(d=>d.id===p.dividaId);
+    if(!div||div.status==='quitado') return;
+    p.parcelas.forEach(parc=>{
+      if(bd.parcelasPagas[`${p.id}-${parc.num}`]) return;
+      const dt=new Date(parc.vencimento+'T12:00');
+      const diff=Math.ceil((dt-hoje)/(1000*60*60*24));
+      prox.push({desc:div.nome,parc:parc.num,total:p.nParcelas,
+        valor:parc.valor,venc:parc.vencimento,diff});
+    });
+  });
+
+  prox.sort((a,b)=>a.diff-b.diff);
+
+  el.innerHTML=prox.length
+    ?prox.slice(0,5).map(p=>{
+      const cor=p.diff<0?'#ff6b6b':p.diff<=7?'#ffd200':'#38ef7d';
+      const label=p.diff<0?`⚠️ ${Math.abs(p.diff)} dias em atraso`:p.diff===0?'📅 Vence hoje!':p.diff<=7?`⚠️ ${p.diff} dias`:p.diff+' dias';
+      return`<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05)">
+        <div>
+          <div style="font-size:.83rem;font-weight:600">${p.desc}</div>
+          <div style="font-size:.7rem;color:rgba(255,255,255,.4)">Parcela ${p.parc}/${p.total} • ${p.venc}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="color:#ff6b6b;font-weight:700">R$ ${fmt(p.valor)}</div>
+          <div style="font-size:.7rem;color:${cor};font-weight:600">${label}</div>
+        </div>
+      </div>`;
+    }).join('')
+    :'<div class="vazio">✅ Nenhum vencimento próximo</div>';
+}
+
+// ══════════════════════════════════════════════
+//  RENDER DÍVIDAS
+// ══════════════════════════════════════════════
+function renderDividas(){
+  let lista=bd.dividas;
+  if(filDiv!=='todos') lista=lista.filter(d=>d.status===filDiv);
+  lista=[...lista].sort((a,b)=>b.valorAtual-a.valorAtual);
+
+  const el=document.getElementById('lista-dividas');
+  if(!lista.length){
+    el.innerHTML='<div class="vazio">💳 Nenhuma dívida cadastrada</div>';return;
+  }
+
+  el.innerHTML=lista.map(d=>{
+    const props=bd.propostas.filter(p=>p.dividaId===d.id);
+    const descontoMax=props.length?Math.max(...props.map(p=>p.desconto||0)):0;
+    const econMax=descontoMax>0?(d.valorAtual*descontoMax/100):0;
+    const diasPrescr=calcularPrescricao(d.vencOriginal);
+
+    return`<div class="divida-card status-${d.status}">
+      <div class="divida-header">
+        <div>
+          <div class="divida-nome">${d.nome}</div>
+          <div class="divida-credor">${TIPO_LABELS[d.tipo]||d.tipo} ${d.credor?'• '+d.credor:''}</div>
+        </div>
+        <span class="status-badge ${statusBadgeClass(d.status)}">${STATUS_LABELS[d.status]||d.status}</span>
+      </div>
+
+      <div class="divida-valores">
+        <div class="dv-item">
+          <div class="dv-label">Valor Original</div>
+          <div class="dv-val" style="color:#ffd200">R$ ${fmt(d.valorOriginal)}</div>
+        </div>
+        <div class="dv-item">
+          <div class="dv-label">Valor Atual</div>
+          <div class="dv-val" style="color:#ff6b6b">R$ ${fmt(d.valorAtual)}</div>
+        </div>
+        <div class="dv-item">
+          <div class="dv-label">Juros Acumulados</div>
+          <div class="dv-val" style="color:#fbc2eb">R$ ${fmt(d.valorAtual-d.valorOriginal)}</div>
+        </div>
+      </div>
+
+      ${d.diasAtraso>0?`<div style="font-size:.75rem;color:#ff6b6b;margin-bottom:8px">⏰ ${d.diasAtraso} dias em atraso</div>`:''}
+      ${diasPrescr!==null?`<div style="font-size:.72rem;color:${diasPrescr<365?'#38ef7d':'rgba(255,255,255,.4)'};margin-bottom:8px">
+        ⚖️ ${diasPrescr>0?`Prescreve em ~${Math.round(diasPrescr/30)} meses`:'⚡ Possivelmente prescrita!'}</div>`:''}
+      ${descontoMax>0?`<div style="font-size:.75rem;color:#38ef7d;margin-bottom:8px">💰 Melhor desconto registrado: ${descontoMax}% (economia de R$ ${fmt(econMax)})</div>`:''}
+      ${props.length>0?`<div style="font-size:.72rem;color:rgba(255,255,255,.4);margin-bottom:8px">🤝 ${props.length} proposta(s) registrada(s)</div>`:''}
+      ${d.obs?`<div style="font-size:.75rem;color:rgba(255,255,255,.5);margin-bottom:8px;font-style:italic">"${d.obs}"</div>`:''}
+
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+        <select onchange="editarStatus('${d.id}',this.value)"
+          style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:white;padding:6px 10px;border-radius:8px;font-size:.75rem;flex:1;outline:none">
+          ${Object.entries(STATUS_LABELS).map(([k,l])=>`<option value="${k}" ${d.status===k?'selected':''}>${l}</option>`).join('')}
+        </select>
+        <button class="btn-sm" onclick="verDetalhes('${d.id}')"
+          style="background:rgba(0,210,255,.15);border:1px solid rgba(0,210,255,.3);color:#00d2ff">
+          🔍 Detalhes
+        </button>
+        <button class="btn-sm del" onclick="delDivida('${d.id}')">🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════
+//  RENDER PROPOSTAS
+// ══════════════════════════════════════════════
+function renderPropostas(){
+  const el=document.getElementById('lista-propostas');
+  if(!bd.propostas.length){
+    el.innerHTML='<div class="vazio">🤝 Nenhuma proposta registrada</div>';return;
+  }
+
+  const sorted=[...bd.propostas].sort((a,b)=>b.ts-a.ts);
+  el.innerHTML=sorted.map(p=>{
+    const div=bd.dividas.find(d=>d.id===p.dividaId);
+    const nomDiv=div?div.nome:'Dívida removida';
+    const valOrig=div?div.valorAtual:0;
+    const econ=valOrig>0?((valOrig-p.valorProposto)/valOrig*100).toFixed(1):0;
+    const psCl={pendente:'ps-pendente','em-analise':'ps-em-analise',aceita:'ps-aceita',recusada:'ps-recusada'}[p.status]||'ps-pendente';
+
+    return`<div class="box" style="margin-bottom:12px">
+      <div class="proposta-header">
+        <div>
+          <div class="proposta-tipo">🤝 ${nomDiv}</div>
+          <div style="font-size:.72rem;color:rgba(255,255,255,.4)">${p.tipo==='vista'?'💵 À Vista':p.tipo==='parcelado'?'📅 Parcelado':p.tipo==='desconto'?'🏷️ Desconto':p.tipo==='feirão'?'🎪 Feirão':'🤝 Acordo'} • ${p.dataProposta||'—'}</div>
+        </div>
+        <span class="proposta-status ${psCl}">${PROP_STATUS[p.status]||p.status}</span>
+      </div>
+
+      <div class="proposta-grid" style="margin-bottom:10px">
+        <div class="pg-item">
+          <div class="pg-l">Valor Proposto</div>
+          <div class="pg-v" style="color:#ffd200">R$ ${fmt(p.valorProposto)}</div>
+        </div>
+        <div class="pg-item">
+          <div class="pg-l">Entrada</div>
+          <div class="pg-v" style="color:#00d2ff">R$ ${fmt(p.entrada)}</div>
+        </div>
+        <div class="pg-item">
+          <div class="pg-l">Parcelas</div>
+          <div class="pg-v">${p.nParcelas}x R$ ${fmt(p.valorParcela)}</div>
+        </div>
+        <div class="pg-item">
+          <div class="pg-l">Desconto</div>
+          <div class="pg-v" style="color:#38ef7d">${p.desconto||0}%</div>
+        </div>
+        <div class="pg-item">
+          <div class="pg-l">Economia</div>
+          <div class="pg-v" style="color:#38ef7d">${econ}%</div>
+        </div>
+        <div class="pg-item">
+          <div class="pg-l">Válida até</div>
+          <div class="pg-v">${p.validadeAte||'—'}</div>
+        </div>
+      </div>
+
+      ${p.contato?`<div style="font-size:.75rem;color:rgba(255,255,255,.45);margin-bottom:8px">📞 ${p.contato}</div>`:''}
+      ${p.obs?`<div style="font-size:.75rem;color:rgba(255,255,255,.5);margin-bottom:8px;font-style:italic">"${p.obs}"</div>`:''}
+
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <select onchange="editarStatusProp('${p.id}',this.value)"
+          style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:white;padding:6px 10px;border-radius:8px;font-size:.75rem;flex:1;outline:none">
+          ${Object.entries(PROP_STATUS).map(([k,l])=>`<option value="${k}" ${p.status===k?'selected':''}>${l}</option>`).join('')}
+        </select>
+        <button class="btn-sm del" onclick="delProposta('${p.id}')">🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════
+//  RENDER PARCELAS
+// ══════════════════════════════════════════════
+function renderParcelas(){
+  const el=document.getElementById('lista-parcelas-ctrl');
+  if(!el) return;
+
+  const proAceitas=bd.propostas.filter(p=>p.status==='aceita'&&p.parcelas&&p.parcelas.length>0);
+  if(!proAceitas.length){
+    el.innerHTML='<div class="vazio">📅 Nenhuma proposta aceita com parcelas</div>';return;
+  }
+
+  el.innerHTML=proAceitas.map(p=>{
+    const div=bd.dividas.find(d=>d.id===p.dividaId);
+    const nomDiv=div?div.nome:'Dívida';
+    const totalPagas=p.parcelas.filter(parc=>bd.parcelasPagas[`${p.id}-${parc.num}`]).length;
+    const totalPago=p.parcelas
+      .filter(parc=>bd.parcelasPagas[`${p.id}-${parc.num}`])
+      .reduce((s,parc)=>s+parc.valor,0);
+    const totalGeral=p.parcelas.reduce((s,parc)=>s+parc.valor,0);
+    const pct=totalGeral>0?(totalPago/totalGeral)*100:0;
+
+    return`<div style="margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div>
+          <div style="font-weight:700;font-size:.9rem">${nomDiv}</div>
+          <div style="font-size:.72rem;color:rgba(255,255,255,.4)">${totalPagas}/${p.nParcelas} parcelas pagas</div>
+        </div>
+        <div style="text-align:right">
+          <div style="color:#38ef7d;font-size:.83rem;font-weight:700">R$ ${fmt(totalPago)}</div>
+          <div style="color:rgba(255,255,255,.4);font-size:.7rem">de R$ ${fmt(totalGeral)}</div>
+        </div>
+      </div>
+      <div class="pb" style="margin-bottom:10px">
+        <div class="pf ${pct>=100?'p-green':pct>=50?'p-blue':'p-yellow'}" style="width:${pct.toFixed(1)}%"></div>
+      </div>
+      ${p.parcelas.map(parc=>{
+        const ch=`${p.id}-${parc.num}`;
+        const paga=!!bd.parcelasPagas[ch];
+        const venc=new Date(parc.vencimento+'T12:00');
+        const hoje=new Date();
+        const atrasada=!paga&&venc<hoje;
+        return`<div class="parcela-item ${paga?'paga':''}">
+          <span class="parc-num">${parc.num}</span>
+          <div style="flex:1">
+            <div style="font-size:.8rem;font-weight:600">${parc.num===1&&p.entrada>0?'Entrada':'Parcela '+parc.num}</div>
+            <div class="parc-data">${parc.vencimento} ${atrasada?'<span style="color:#ff6b6b;font-size:.68rem">⚠️ Atrasada</span>':''}</div>
+          </div>
+          <span class="parc-val ${paga?'pago':''}">R$ ${fmt(parc.valor)}</span>
+          <div class="chk-parc ${paga?'on':''}" onclick="toggleParcela('${p.id}',${parc.num},${parc.valor})"
+            title="${paga?'Clique para desmarcar':'Clique para confirmar pagamento'}">
+            ${paga?'✓':''}
+          </div>
+        </div>`;
+      }).join('')}
+      <div class="sep"></div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════
+//  VER DETALHES (MODAL)
+// ══════════════════════════════════════════════
+function verDetalhes(id){
+  const d=bd.dividas.find(x=>x.id===id);
+  if(!d) return;
+  const props=bd.propostas.filter(p=>p.dividaId===id);
+
+  document.getElementById('modal-titulo').textContent=d.nome;
+  document.getElementById('modal-conteudo').innerHTML=`
+    <div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span style="color:rgba(255,255,255,.5);font-size:.82rem">Credor</span>
+        <span style="font-size:.82rem;font-weight:600">${d.credor||'—'}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span style="color:rgba(255,255,255,.5);font-size:.82rem">Tipo</span>
+        <span style="font-size:.82rem">${TIPO_LABELS[d.tipo]}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span style="color:rgba(255,255,255,.5);font-size:.82rem">Venc. Original</span>
+        <span style="font-size:.82rem">${d.vencOriginal||'—'}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span style="color:rgba(255,255,255,.5);font-size:.82rem">Dias em Atraso</span>
+        <span style="font-size:.82rem;color:#ff6b6b">${d.diasAtraso||0} dias</span>
+      </div>
+      <div style="display:flex;justify-content:space-between">
+        <span style="color:rgba(255,255,255,.5);font-size:.82rem">Status</span>
+        <span class="status-badge ${statusBadgeClass(d.status)}">${STATUS_LABELS[d.status]}</span>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">
+      <div class="dv-item"><div class="dv-label">Original</div><div class="dv-val" style="color:#ffd200;font-size:.8rem">R$ ${fmt(d.valorOriginal)}</div></div>
+      <div class="dv-item"><div class="dv-label">Atual</div><div class="dv-val" style="color:#ff6b6b;font-size:.8rem">R$ ${fmt(d.valorAtual)}</div></div>
+      <div class="dv-item"><div class="dv-label">Juros</div><div class="dv-val" style="color:#fbc2eb;font-size:.8rem">R$ ${fmt(d.valorAtual-d.valorOriginal)}</div></div>
+    </div>
+
+    ${d.obs?`<div class="dica" style="margin-bottom:12px"><span>📝</span><span>${d.obs}</span></div>`:''}
+
+    <div class="sep"></div>
+
+    <div style="font-weight:700;margin-bottom:10px">🤝 Propostas (${props.length})</div>
+    ${props.length?props.map(p=>`
+      <div style="background:rgba(255,255,255,.04);border-radius:9px;padding:10px;margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+          <span style="font-size:.8rem;font-weight:600">${p.tipo==='vista'?'💵 À Vista':p.tipo==='parcelado'?'📅 Parcelado':'🤝 Acordo'}</span>
+          <span class="proposta-status ${({pendente:'ps-pendente','em-analise':'ps-em-analise',aceita:'ps-aceita',recusada:'ps-recusada'})[p.status]}">${PROP_STATUS[p.status]}</span>
+        </div>
+        <div style="font-size:.78rem;color:rgba(255,255,255,.6)">
+          R$ ${fmt(p.valorProposto)} • ${p.nParcelas}x R$ ${fmt(p.valorParcela)} • ${p.desconto||0}% desc. • ${p.dataProposta}
+        </div>
+      </div>`).join('')
+    :'<div class="vazio">Nenhuma proposta para esta dívida</div>'}`;
+
+  document.getElementById('modal-divida').classList.add('open');
+}
+
+function fecharModal(){
+  document.getElementById('modal-divida').classList.remove('open');
+}
+
+// ══════════════════════════════════════════════
+//  PLANO DE QUITAÇÃO
+// ══════════════════════════════════════════════
+function gerarPlano(){
+  const renda=parseFloat(v('plano-renda'));
+  const metodo=v('plano-metodo');
+  const el=document.getElementById('plano-resultado');
+
+  if(isNaN(renda)||renda<=0){notif('Informe a renda disponível!','err');return;}
+
+  let dividas=[...bd.dividas.filter(d=>d.status!=='quitado')];
+  if(!dividas.length){el.innerHTML='<div class="vazio">✅ Nenhuma dívida em aberto!</div>';return;}
+
+  // Ordenar por método
+  if(metodo==='avalanche'){
+    // Maior juros = maior diferença entre valor atual e original
+    dividas.sort((a,b)=>{
+      const jaA=(a.valorAtual-a.valorOriginal)/a.valorOriginal;
+      const jaB=(b.valorAtual-b.valorOriginal)/b.valorOriginal;
+      return jaB-jaA;
+    });
+  } else if(metodo==='bola-neve'){
+    dividas.sort((a,b)=>a.valorAtual-b.valorAtual);
+  }
+
+  const totalDiv=dividas.reduce((s,d)=>s+d.valorAtual,0);
+  const mesesEst=Math.ceil(totalDiv/renda);
+
+  let html=`
+  <div style="background:rgba(56,239,125,.08);border:1px solid rgba(56,239,125,.2);border-radius:10px;padding:12px;margin-bottom:14px">
+    <div style="font-weight:700;margin-bottom:6px;color:#38ef7d">📊 Estimativa do Plano</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:.82rem">
+      <div>Total em dívidas: <strong style="color:#ff6b6b">R$ ${fmt(totalDiv)}</strong></div>
+      <div>Disponível/mês: <strong style="color:#38ef7d">R$ ${fmt(renda)}</strong></div>
+      <div>Prazo estimado: <strong style="color:#ffd200">~${mesesEst} meses</strong></div>
+      <div>Método: <strong style="color:#00d2ff">${metodo==='avalanche'?'Avalanche':metodo==='bola-neve'?'Bola de Neve':'Proporcional'}</strong></div>
+    </div>
+  </div>
+  <div style="font-weight:700;margin-bottom:10px">📋 Ordem de Quitação:</div>`;
+
+  let rendaRestante=renda;
+  dividas.forEach((d,i)=>{
+    let valor;
+    if(metodo==='proporcional'){
+      valor=renda*(d.valorAtual/totalDiv);
+    } else {
+      valor=i===0?Math.min(rendaRestante,d.valorAtual):0;
+      if(i===0) rendaRestante-=valor;
+    }
+    const meses=valor>0?Math.ceil(d.valorAtual/valor):999;
+
+    html+=`<div style="display:flex;align-items:center;gap:10px;padding:10px;background:rgba(255,255,255,.04);border-radius:9px;margin-bottom:8px">
+      <div style="width:28px;height:28px;border-radius:50%;background:${i===0?'linear-gradient(135deg,#e94560,#ff6b6b)':'rgba(255,255,255,.1)'};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;flex-shrink:0">${i+1}</div>
+      <div style="flex:1">
+        <div style="font-weight:600;font-size:.85rem">${d.nome}</div>
+        <div style="font-size:.72rem;color:rgba(255,255,255,.45)">${d.credor||''} • R$ ${fmt(d.valorAtual)}</div>
+      </div>
+      <div style="text-align:right;font-size:.78rem">
+        <div style="color:#ffd200;font-weight:700">${valor>0?'R$ '+fmt(valor)+'/mês':'Depois'}</div>
+        <div style="color:rgba(255,255,255,.4)">${meses<999?'~'+meses+' meses':'—'}</div>
+      </div>
+    </div>`;
+  });
+
+  el.innerHTML=html;
+}
+
+// ══════════════════════════════════════════════
+//  SIMULADOR DESCONTO
+// ══════════════════════════════════════════════
+function simularDesconto(){
+  const dividaId=v('sim-divida');
+  const desc=parseFloat(v('sim-desconto'))||0;
+  const parcelas=parseInt(v('sim-parcelas'))||1;
+  const entrada=parseFloat(v('sim-entrada'))||0;
+  const el=document.getElementById('sim-resultado');
+
+  const div=bd.dividas.find(d=>d.id===dividaId);
+  if(!div){notif('Selecione a dívida!','err');return;}
+
+  const valorComDesc=div.valorAtual*(1-desc/100);
+  const restante=valorComDesc-entrada;
+  const valParc=restante>0?restante/parcelas:0;
+  const economia=div.valorAtual-valorComDesc;
+
+  el.innerHTML=`
+  <div class="sep"></div>
+  <div style="font-weight:700;margin-bottom:10px;color:#38ef7d">📊 Resultado da Simulação</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+    <div class="dv-item"><div class="dv-label">Valor Atual</div><div class="dv-val" style="color:#ff6b6b">R$ ${fmt(div.valorAtual)}</div></div>
+    <div class="dv-item"><div class="dv-label">Desconto ${desc}%</div><div class="dv-val" style="color:#38ef7d">- R$ ${fmt(economia)}</div></div>
+    <div class="dv-item"><div class="dv-label">Valor Final</div><div class="dv-val" style="color:#ffd200">R$ ${fmt(valorComDesc)}</div></div>
+    <div class="dv-item"><div class="dv-label">Entrada</div><div class="dv-val" style="color:#00d2ff">R$ ${fmt(entrada)}</div></div>
+    <div class="dv-item"><div class="dv-label">${parcelas}x de</div><div class="dv-val" style="color:#fbc2eb">R$ ${fmt(valParc)}</div></div>
+    <div class="dv-item"><div class="dv-label">Você economiza</div><div class="dv-val" style="color:#38ef7d">R$ ${fmt(economia)}</div></div>
+  </div>
+  <div class="dica" style="margin-top:10px">
+    <span>💡</span>
+    <span>Com ${desc}% de desconto você economiza <strong style="color:#38ef7d">R$ ${fmt(economia)}</strong> pagando apenas <strong>R$ ${fmt(valorComDesc)}</strong> em ${parcelas}x de R$ ${fmt(valParc)}</span>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════
+//  CHECKLIST
+// ══════════════════════════════════════════════
+function renderChecklist(){
+  const el=document.getElementById('checklist');
+  if(!el) return;
+  el.innerHTML=CHECKLIST_ITEMS.map(item=>{
+    const feito=!!bd.checklist[item.id];
+    return`<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer" onclick="toggleCheck('${item.id}')">
+      <div class="chk-parc ${feito?'on':''}" style="flex-shrink:0">${feito?'✓':''}</div>
+      <span style="font-size:.83rem;${feito?'text-decoration:line-through;color:rgba(255,255,255,.4)':''}">${item.texto}</span>
+    </div>`;
+  }).join('');
+}
+
+function toggleCheck(id){
+  bd.checklist[id]=!bd.checklist[id];
+  salvarBD();renderChecklist();
+}
+
+// ══════════════════════════════════════════════
+//  PRESCRIÇÃO
+// ══════════════════════════════════════════════
+function calcularPrescricao(dataVenc){
+  if(!dataVenc) return null;
+  const venc=new Date(dataVenc+'T12:00');
+  const prescricao=new Date(venc);
+  prescricao.setFullYear(prescricao.getFullYear()+5);
+  const hoje=new Date();
+  const diff=(prescricao-hoje)/(1000*60*60*24);
+  return diff;
+}
+
+// ══════════════════════════════════════════════
+//  SELECTS DINÂMICOS
+// ══════════════════════════════════════════════
+function atualizarSelects(){
+  const ids=['p-divida','sim-divida'];
+  ids.forEach(selId=>{
+    const el=document.getElementById(selId);
+    if(!el) return;
+    const val=el.value;
+    el.innerHTML='<option value="">Selecione a dívida...</option>'
+      +bd.dividas.map(d=>`<option value="${d.id}" ${d.id===val?'selected':''}>${d.nome} — R$ ${fmt(d.valorAtual)} [${STATUS_LABELS[d.status]||d.status}]</option>`).join('');
+  });
+}
+
+// ══════════════════════════════════════════════
+//  FILTRO DÍVIDAS
+// ══════════════════════════════════════════════
+function setFilDiv(f,btn){
+  filDiv=f;
+  document.querySelectorAll('[id^="fil-"]').forEach(b=>{
+    b.style.background='rgba(255,255,255,.08)';
+    b.style.borderColor='rgba(255,255,255,.15)';
+    b.style.color='rgba(255,255,255,.6)';
+  });
+  btn.style.background='rgba(233,69,96,.2)';
+  btn.style.borderColor='#e94560';
+  btn.style.color='#ff6b6b';
+  renderDividas();
+}
+
+// ══════════════════════════════════════════════
+//  NAVEGAÇÃO
+// ══════════════════════════════════════════════
+function ir(id,el){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.getElementById('s-'+id).classList.add('on');
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  if(el) el.classList.add('on');
+  window.scrollTo(0,0);
+  atualizarSelects();
+  if(id==='parcelas') renderParcelas();
+  if(id==='plano') atualizarSelects();
+  if(id==='dicas') renderChecklist();
+}
+
+// ══════════════════════════════════════════════
+//  NOTIFICAÇÃO
+// ══════════════════════════════════════════════
+function notif(msg,tipo='ok'){
+  const el=document.createElement('div');
+  el.className='notif '+(tipo==='ok'?'nok':tipo==='info'?'ninfo':'nerr');
+  el.textContent=msg;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),3500);
+}
+
+// Fechar modal clicando fora
+document.getElementById('modal-divida').addEventListener('click',function(e){
+  if(e.target===this) fecharModal();
+});
+</script>
+<!-- BOTÃO VOLTAR → FINANCAS -->
+<a href="index.html" style="
+    position: fixed;
+    bottom: 20px;
+    right: 16px;
+    background: linear-gradient(135deg,#11998e,#38ef7d);
+    color: #1a1a2e;
+    border-radius: 50px;
+    padding: 12px 18px;
+    font-size: .82rem;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 5px 20px rgba(56,239,125,.4);
+    z-index: 999;
+">
+    🏠 Voltar ao App
+</a></body>
+</html>
