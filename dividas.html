@@ -2,8 +2,17 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💳 Gestão de Dívidas — Serasa</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#e94560">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Dívidas & Serasa">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="./icons/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
+<link rel="shortcut icon" href="./icons/favicon.ico">
+<title>💳 Gestão de Dívidas & Negociação Serasa</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);min-height:100vh;color:#e0e0e0;padding-bottom:75px}
@@ -154,7 +163,15 @@ body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#1a1a2e
 <body>
 
 <div class="header">
-  <h1>💳 Gestão de Dívidas & Negociação</h1>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <a href="./index.html" style="text-decoration:none;display:flex;align-items:center;background:rgba(255,255,255,0.15);padding:6px 10px;border-radius:12px;color:white;font-size:0.75rem;font-weight:700;border:1px solid rgba(255,255,255,0.25);">
+      ← 🏠 App Principal
+    </a>
+    <h1 style="font-size:1.05rem;">💳 Dívidas & Negociação</h1>
+  </div>
+  <div>
+    <img src="./icons/apple-touch-icon.png" alt="Logo" style="width:34px;height:34px;border-radius:9px;border:1px solid rgba(255,255,255,0.2);">
+  </div>
 </div>
 
 <div class="nav">
@@ -259,6 +276,12 @@ body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#1a1a2e
       <input id="d-valor-orig" type="number" placeholder="Valor original R$" step="0.01" inputmode="decimal">
       <input id="d-valor-atual" type="number" placeholder="Valor atual com juros R$" step="0.01" inputmode="decimal">
       <input id="d-venc-orig" type="date" placeholder="Data vencimento original">
+      <select id="d-membro">
+        <option value="pai">👨 Pai</option>
+        <option value="mae">👩 Mãe</option>
+        <option value="filho">👦 Filho</option>
+        <option value="familia">👨‍👩‍👦 Família (Conjunta)</option>
+      </select>
       <select id="d-tipo">
         <option value="cartao">💳 Cartão de Crédito</option>
         <option value="emprestimo">💰 Empréstimo</option>
@@ -493,6 +516,7 @@ const PROP_STATUS={
 // ══════════════════════════════════════════════
 window.onload=()=>{
   carregarBD();
+  importarDividasExcel();
   renderChecklist();
   renderTudo();
   // Data padrão
@@ -516,6 +540,14 @@ function carregarBD(){
     bd.checklist=s.checklist||{};
   }
 }
+function importarDividasExcel(){
+  if(localStorage.getItem('ff_dividas_excel_v1')==='1'||bd.dividas.length)return;
+  fetch('./excel_seed.json').then(r=>r.ok?r.json():Promise.reject()).then(seed=>{
+    bd.dividas=(seed.dividas||[]).map(d=>({...d,status:'negociando',tipo:'serasa',vencOriginal:'',diasAtraso:0,obs:'Importada da planilha Controle_Dividas_Apresentacao.xlsx',ts:Date.now()}));
+    localStorage.setItem('ff_dividas_excel_v1','1');
+    salvarBD();renderTudo();notif('📥 Dívidas do Excel importadas!','info');
+  }).catch(()=>console.warn('Seed do Excel indisponível para o módulo de dívidas.'));
+}
 
 // ══════════════════════════════════════════════
 //  HELPERS
@@ -524,7 +556,18 @@ function fmt(v){return(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,max
 function v(id){const e=document.getElementById(id);return e?e.value:'';}
 function sv(id,val){const e=document.getElementById(id);if(e)e.value=val;}
 function set(id,val){const e=document.getElementById(id);if(e)e.textContent=val;}
-
+function nomeMembroDivida(id){
+  const padrao={pai:'👨 Pai',mae:'👩 Mãe',filho:'👦 Filho',familia:'👨‍👩‍👦 Família'};
+  try{
+    const cfg=JSON.parse(localStorage.getItem('ff_cfg')||'{}');
+    const m=(cfg.membros||[]).find(x=>x.id===id);
+    if(m)return `${m.icone||'👤'} ${m.nome||id}`;
+    if(id==='pai'&&cfg.pai)return `👨 ${cfg.pai}`;
+    if(id==='mae'&&cfg.mae)return `👩 ${cfg.mae}`;
+    if(id==='filho'&&cfg.filho)return `👦 ${cfg.filho}`;
+  }catch(e){}
+  return padrao[id]||'👤 Não informado';
+}
 function statusBadgeClass(s){
   return{atrasado:'sb-atrasado',negociando:'sb-negociando',
     proposta:'sb-proposta',parcelado:'sb-parcelado',quitado:'sb-quitado'}[s]||'sb-atrasado';
@@ -550,6 +593,7 @@ function addDivida(){
     valorOriginal:valOrig,
     valorAtual:valAtual,
     vencOriginal:v('d-venc-orig'),
+    membro:v('d-membro')||'familia',
     tipo:v('d-tipo'),
     status:v('d-status'),
     diasAtraso:parseInt(v('d-dias-atraso'))||0,
@@ -563,7 +607,7 @@ function addDivida(){
 
   // Limpar form
   ['d-nome','d-credor','d-cpf-cnpj','d-valor-orig','d-valor-atual',
-   'd-venc-orig','d-dias-atraso','d-obs'].forEach(id=>sv(id,''));
+   'd-venc-orig','d-membro','d-dias-atraso','d-obs'].forEach(id=>sv(id,''));
 
   renderTudo();
   notif('💳 Dívida cadastrada!','ok');
@@ -872,6 +916,7 @@ function renderDividas(){
         <div>
           <div class="divida-nome">${d.nome}</div>
           <div class="divida-credor">${TIPO_LABELS[d.tipo]||d.tipo} ${d.credor?'• '+d.credor:''}</div>
+          <div style="font-size:.72rem;color:#00d2ff;margin-top:4px">👤 Responsável: ${nomeMembroDivida(d.membro||'familia')}</div>
         </div>
         <span class="status-badge ${statusBadgeClass(d.status)}">${STATUS_LABELS[d.status]||d.status}</span>
       </div>
@@ -1302,7 +1347,7 @@ document.getElementById('modal-divida').addEventListener('click',function(e){
 });
 </script>
 <!-- BOTÃO VOLTAR → FINANCAS -->
-<a href="index.html" style="
+<a href='/' style='
     position: fixed;
     bottom: 20px;
     right: 16px;
@@ -1315,7 +1360,7 @@ document.getElementById('modal-divida').addEventListener('click',function(e){
     text-decoration: none;
     box-shadow: 0 5px 20px rgba(56,239,125,.4);
     z-index: 999;
-">
+'>
     🏠 Voltar ao App
 </a></body>
 </html>

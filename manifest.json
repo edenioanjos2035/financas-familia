@@ -1,7 +1,7 @@
 {
   "name": "Finanças Família",
   "short_name": "Finanças",
-  "description": "Controle Financeiro Familiar",
+  "description": "Controle Financeiro Familiar Completo & Dívidas",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#1a1a2e",
@@ -9,13 +9,20 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "https://via.placeholder.com/192x192/e94560/ffffff?text=F",
+      "src": "./icons/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "https://via.placeholder.com/512x512/e94560/ffffff?text=F",
+      "src": "./icons/icon-512.png",
       "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icons/apple-touch-icon.png",
+      "sizes": "180x180",
       "type": "image/png"
     }
   ]

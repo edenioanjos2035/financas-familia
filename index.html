@@ -2,7 +2,17 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#e94560">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Finanças">
+<meta name="description" content="Gestão financeira familiar completa, despesas fixas, membros da família e negociação de dívidas.">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="./icons/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
+<link rel="shortcut icon" href="./icons/favicon.ico">
 <title>💰 Finanças Família</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -20,6 +30,16 @@ body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#1a1a2e
 .nav::-webkit-scrollbar{display:none}
 .nb{flex:0 0 auto;padding:11px 14px;border:none;background:transparent;color:rgba(255,255,255,.5);font-size:.78rem;cursor:pointer;border-bottom:2px solid transparent;font-weight:600;white-space:nowrap}
 .nb.on{color:#e94560;border-bottom-color:#e94560;background:rgba(233,69,96,.1)}
+
+
+/* MEMBRO ATIVO E PERFIS */
+.perfil-bar{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.08);padding:8px 14px;gap:8px;overflow-x:auto}
+.perfil-chips{display:flex;gap:6px;align-items:center}
+.pchip{padding:4px 10px;border-radius:14px;font-size:.74rem;font-weight:700;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:rgba(255,255,255,.7);cursor:pointer;white-space:nowrap;transition:all .2s}
+.pchip.on{background:linear-gradient(90deg,#e94560,#ff6b6b);color:white;border-color:transparent;box-shadow:0 2px 8px rgba(233,69,96,.4)}
+.tag-membro{display:inline-block;padding:2px 7px;border-radius:10px;font-size:.68rem;font-weight:700;background:rgba(255,255,255,.1);margin-left:4px}
+.membro-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px;margin-bottom:10px}
+.membro-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 
 /* SEÇÕES */
 .sec{display:none;padding:14px;max-width:800px;margin:0 auto}
@@ -144,13 +164,34 @@ body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#1a1a2e
 
 /* META */
 .meta-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px;margin-bottom:10px}
+/* TEMA CLARO */
+body.theme-light{background:linear-gradient(135deg,#eef2ff,#f8fafc,#e0f2fe);color:#1f2937}
+body.theme-light .header{background:linear-gradient(90deg,#2563eb,#0ea5e9);box-shadow:0 4px 20px rgba(37,99,235,.25)}
+body.theme-light .nav{background:rgba(255,255,255,.9);border-color:rgba(15,23,42,.1)}
+body.theme-light .perfil-bar{background:rgba(255,255,255,.86);border-color:rgba(15,23,42,.1)}
+body.theme-light .box,.theme-light .card,.theme-light .membro-card{background:rgba(255,255,255,.86);border-color:rgba(15,23,42,.1);box-shadow:0 8px 24px rgba(15,23,42,.06)}
+body.theme-light .cl,body.theme-light .cfg-s,body.theme-light .item-sub,body.theme-light .vazio{color:rgba(31,41,55,.62)}
+body.theme-light .nb,body.theme-light .bb{color:rgba(31,41,55,.62)}
+body.theme-light .fg input,body.theme-light .fg select,body.theme-light .cfg-inp{background:#fff;color:#1f2937;border-color:rgba(15,23,42,.18)}
+body.theme-light .sel{background:rgba(255,255,255,.2);color:#fff}
+body.theme-light .exc td,body.theme-light .item,body.theme-light .fix-item{border-color:rgba(15,23,42,.1)}
+.segmented{display:flex;gap:7px;flex-wrap:wrap}.segmented button{flex:1;min-width:120px;padding:9px;border-radius:9px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:inherit;cursor:pointer;font-weight:700}.segmented button.active{background:linear-gradient(90deg,#3a7bd5,#00d2ff);color:white;border-color:transparent}
+.security-status{font-size:.75rem;color:#38ef7d;margin-top:7px}
 </style>
 </head>
 <body>
-
 <div class="header">
-  <h1>💰 Finanças Família</h1>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <img src="./icons/apple-touch-icon.png" alt="Logo Finanças Família" style="width:36px;height:36px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.2);">
+    <div>
+      <h1 style="font-size:1.15rem;line-height:1.1;">Finanças Família</h1>
+      <span style="font-size:0.68rem;color:rgba(255,255,255,0.7);display:block;">Gestão Financeira & Membros</span>
+    </div>
+  </div>
   <div class="hright">
+    <a href="./dividas.html" style="background:rgba(233,69,96,0.25);border:1px solid rgba(233,69,96,0.6);color:#ff758c;padding:5px 9px;border-radius:20px;font-size:0.75rem;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:4px;">
+      💳 Dívidas
+    </a>
     <select class="sel" id="selMes" onchange="mudarMes()">
       <option value="0">Jan</option><option value="1">Fev</option><option value="2">Mar</option>
       <option value="3">Abr</option><option value="4">Mai</option><option value="5">Jun</option>
@@ -169,6 +210,15 @@ body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#1a1a2e
   <button class="nb" onclick="ir('relatorio',this)">📊 Relatório</button>
   <button class="nb" onclick="ir('metas',this)">🎯 Metas</button>
   <button class="nb" onclick="ir('config',this)">⚙️ Config</button>
+</div>
+
+<div class="perfil-bar">
+  <div style="font-size:.72rem;color:rgba(255,255,255,.5);font-weight:600;display:flex;align-items:center;gap:4px;">
+    <span>👤 Visualizar:</span>
+  </div>
+  <div class="perfil-chips" id="bar-perfil-chips">
+    <!-- Gerado dinamicamente -->
+  </div>
 </div>
 
 <!-- ═══════ INÍCIO ═══════ -->
@@ -278,13 +328,12 @@ body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#1a1a2e
 
   <div class="box">
     <div class="bt">📋 Lançamentos do Mês <span id="qtd-lanc" style="font-size:.75rem;color:rgba(255,255,255,.4)">0</span></div>
-    <div class="filtros">
+    <div class="filtros" id="bar-filtros-lanc">
       <button class="fb on" onclick="setFil('todos',this)">Todos</button>
       <button class="fb" onclick="setFil('rec',this)">💚 Receitas</button>
       <button class="fb" onclick="setFil('desp',this)">❤️ Despesas</button>
       <button class="fb" onclick="setFil('fixos',this)">🔒 Fixos</button>
-      <button class="fb" onclick="setFil('pai',this)">👨 Pai</button>
-      <button class="fb" onclick="setFil('mae',this)">👩 Mãe</button>
+      <!-- Membros inseridos dinamicamente -->
     </div>
     <div id="lista-lanc"></div>
   </div>
@@ -422,6 +471,11 @@ body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#1a1a2e
     <div class="bt">👨‍👩‍👦 Gastos por Membro</div>
     <div id="por-membro"></div>
   </div>
+  <div class="box">
+    <div class="bt">💰 Recebíveis do Terreno</div>
+    <div id="recebiveis-resumo"></div>
+    <button class="btn btn-r" onclick="baixarRelatorioPDF()">📄 Baixar relatório completo em PDF</button>
+  </div>
 </div>
 
 <!-- ═══════ METAS ═══════ -->
@@ -436,26 +490,54 @@ body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#1a1a2e
       <button class="btn btn-m" onclick="addMeta()">🎯 Criar Meta</button>
     </div>
   </div>
-  <div id="lista-metas"></div>
+<div id="lista-metas"></div>
+</div>
+
+<div id="lock-screen" style="display:none;position:fixed;inset:0;background:linear-gradient(135deg,#1a1a2e,#0f3460);z-index:10000;align-items:center;justify-content:center;padding:20px">
+  <div class="box" style="width:min(380px,100%);text-align:center">
+    <img src="./icons/apple-touch-icon.png" alt="Logo" style="width:74px;height:74px;border-radius:20px;margin-bottom:12px">
+    <h2 style="margin-bottom:6px">🔐 Finanças Família</h2>
+    <p style="font-size:.8rem;color:rgba(255,255,255,.6);margin-bottom:16px">Digite sua senha para acessar seus dados.</p>
+    <input id="senha-acesso" type="password" placeholder="Senha de acesso" onkeydown="if(event.key==='Enter') desbloquearApp()" style="width:100%;padding:12px;border-radius:9px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:white;margin-bottom:10px">
+    <button class="btn btn-r" onclick="desbloquearApp()">Entrar</button>
+    <div id="erro-acesso" style="color:#ff9aa9;font-size:.75rem;margin-top:9px;min-height:16px"></div>
+  </div>
 </div>
 
 <!-- ═══════ CONFIG ═══════ -->
 <div class="sec" id="s-config">
   <div class="box" style="margin-top:14px">
-    <div class="bt">👤 Família</div>
-    <div class="cfg-i"><div><div class="cfg-l">👨 Nome do Pai</div></div><input class="cfg-inp" id="cfg-pai" onchange="salvarCfg()"></div>
-    <div class="cfg-i"><div><div class="cfg-l">👩 Nome da Mãe</div></div><input class="cfg-inp" id="cfg-mae" onchange="salvarCfg()"></div>
-    <div class="cfg-i"><div><div class="cfg-l">👦 Nome do Filho</div></div><input class="cfg-inp" id="cfg-filho" onchange="salvarCfg()"></div>
-  </div>
-  <div class="box">
-    <div class="bt">💰 Salários</div>
-    <div class="cfg-i"><div><div class="cfg-l">Salário Pai</div></div><input class="cfg-inp" id="cfg-sp" type="number" onchange="salvarCfg()"></div>
-    <div class="cfg-i"><div><div class="cfg-l">Salário Mãe</div></div><input class="cfg-inp" id="cfg-sm" type="number" onchange="salvarCfg()"></div>
-    <div class="cfg-i"><div><div class="cfg-l">Mesada Filho</div></div><input class="cfg-inp" id="cfg-mf" type="number" onchange="salvarCfg()"></div>
+    <div class="bt">
+      <span>👤 Membros da Família</span>
+      <button onclick="abrirModalNovoMembro()" style="background:linear-gradient(90deg,#11998e,#38ef7d);color:#1a1a2e;border:none;padding:5px 10px;border-radius:15px;font-size:.72rem;font-weight:700;cursor:pointer;">+ Adicionar Membro</button>
+    </div>
+    <div id="lista-membros-gerenciamento">
+      <!-- Gerado dinamicamente -->
+    </div>
   </div>
   <div class="box">
     <div class="bt">📊 Limites por Categoria</div>
     <div id="cfg-orc"></div>
+  </div>
+  <div class="box">
+    <div class="bt">🎨 Aparência</div>
+    <div class="cfg-s" style="margin-bottom:9px">Escolha como o aplicativo será exibido neste dispositivo.</div>
+    <div class="segmented">
+      <button id="tema-escuro" onclick="definirTema('dark')">🌙 Escuro</button>
+      <button id="tema-claro" onclick="definirTema('light')">☀️ Claro</button>
+    </div>
+  </div>
+  <div class="box">
+    <div class="bt">🔐 Senha de acesso</div>
+    <div class="cfg-s" style="margin-bottom:9px">A senha protege o acesso neste navegador. Ela não é um login na nuvem.</div>
+    <div class="fg">
+      <input id="senha-atual" type="password" placeholder="Senha atual (se houver)" class="s2">
+      <input id="senha-nova" type="password" placeholder="Nova senha (mínimo 4 caracteres)" class="s2">
+      <input id="senha-confirmacao" type="password" placeholder="Confirmar nova senha" class="s2">
+      <button class="btn btn-f" onclick="salvarSenhaAcesso()">🔒 Salvar senha</button>
+      <button class="btn" style="background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#fca5a5" onclick="removerSenhaAcesso()">🔓 Remover senha</button>
+    </div>
+    <div id="status-senha" class="security-status"></div>
   </div>
   <div class="box">
     <div class="bt">🗃️ Backup</div>
@@ -475,312 +557,449 @@ body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#1a1a2e
   <button class="bb" id="bn4" onclick="ir('relatorio',null,4)"><span>📊</span><span>Relatório</span></button>
 </div>
 
+<script src="./vendor/jspdf.umd.min.js"></script>
 <script>
 // ══════════════════════════════════════════════
-//  CONSTANTES
+//  CONSTANTES E CONFIGURAÇÕES PADRÃO
 // ══════════════════════════════════════════════
-const MESES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
-             'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const MESES = [
+  'Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+  'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'
+];
 
-const CDESP={moradia:'🏠 Moradia',alimentacao:'🍽️ Alimentação',
-  transporte:'🚗 Transporte',saude:'💊 Saúde',educacao:'📚 Educação',
-  lazer:'🎮 Lazer',filho:'👦 Filho',outros:'📦 Outros'};
-
-const CREC={salario:'💼 Salário',extra:'💡 Extra',
-  investimento:'📊 Investimento',outros:'📦 Outros'};
-
-// ══════════════════════════════════════════════
-//  ESTADO
-// ══════════════════════════════════════════════
-let mes=new Date().getMonth(), ano=new Date().getFullYear();
-let filtro='todos', togAtivo='r';
-
-let bd={
-  receitas:[],   // lançamentos manuais
-  despesas:[],   // lançamentos manuais
-  fixos:[],      // itens fixos (despesas e receitas)
-  metas:[],
-  pagamentos:{}  // chave: "fixoId-ano-mes" → {pago:bool, dataPag, valorPago}
+const CDESP = {
+  moradia: '🏠 Moradia',
+  alimentacao: '🍽️ Alimentação',
+  transporte: '🚗 Transporte',
+  saude: '💊 Saúde',
+  educacao: '📚 Educação',
+  lazer: '🎮 Lazer',
+  filho: '👦 Filho',
+  outros: '📦 Outros'
 };
 
-let cfg={
-  pai:'Pai',mae:'Mãe',filho:'Filho',
-  sp:5000,sm:4000,mf:200,
-  orc:{moradia:1500,alimentacao:800,transporte:400,saude:300,
-       educacao:500,lazer:300,filho:400,outros:200}
+const CREC = {
+  salario: '💼 Salário',
+  extra: '💡 Renda Extra',
+  investimento: '📊 Investimento',
+  terreno: '🏞️ Recebível do terreno',
+  outros: '📦 Outros'
 };
 
 // ══════════════════════════════════════════════
-//  INIT
+//  ESTADO DA APLICAÇÃO
 // ══════════════════════════════════════════════
-window.onload=()=>{
+let mes = new Date().getMonth();
+let ano = new Date().getFullYear();
+let filtro = 'todos';
+let togAtivo = 'r';
+let membroVisualizacao = 'todos'; // 'todos' ou id do membro ativo
+
+let bd = {
+  receitas: [],
+  despesas: [],
+  fixos: [],
+  metas: [],
+  pagamentos: {}, // "itemId-ano-mes" -> {pago: true, dataPag: string, valorPago: number}
+  recebiveis: [],
+  dividas: []
+};
+
+let cfg = {
+  membros: [
+    { id: 'pai', nome: 'Pai', icone: '👨', rendaMensal: 5000, cor: '#3a7bd5' },
+    { id: 'mae', nome: 'Mãe', icone: '👩', rendaMensal: 4000, cor: '#e94560' },
+    { id: 'filho', nome: 'Filho', icone: '👦', rendaMensal: 200, cor: '#f7971e' },
+    { id: 'familia', nome: 'Família (Conjunto)', icone: '👨‍👩‍👦', rendaMensal: 0, cor: '#38ef7d' }
+  ],
+  orc: {
+    moradia: 1500,
+    alimentacao: 800,
+    transporte: 400,
+    saude: 300,
+    educacao: 500,
+    lazer: 300,
+    filho: 400,
+    outros: 200
+  },
+  tema: 'dark',
+  senhaHash: ''
+};
+
+// ══════════════════════════════════════════════
+//  INICIALIZAÇÃO & PWA REGISTRO
+// ══════════════════════════════════════════════
+window.onload = () => {
   carregarTudo();
-  const sa=document.getElementById('selAno');
-  for(let y=ano-2;y<=ano+2;y++){
-    const o=document.createElement('option');
-    o.value=y;o.textContent=y;
-    if(y===ano)o.selected=true;
+  aplicarTema();
+  atualizarStatusSenha();
+  
+  // Registrar Service Worker para PWA
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
+      .then(reg => { reg.update(); console.log('SW atualizado:', reg.scope); })
+      .catch(err => console.log('Falha ao registrar SW:', err));
+  }
+
+  // Preencher seletores de ano e mês
+  const sa = document.getElementById('selAno');
+  sa.innerHTML = '';
+  for (let y = ano - 2; y <= ano + 2; y++) {
+    const o = document.createElement('option');
+    o.value = y;
+    o.textContent = y;
+    if (y === ano) o.selected = true;
     sa.appendChild(o);
   }
-  document.getElementById('selMes').value=mes;
-  const hj=new Date().toISOString().split('T')[0];
-  document.getElementById('r-data').value=hj;
-  document.getElementById('d-data').value=hj;
-  carregarCfgUI();
+  document.getElementById('selMes').value = mes;
+
+  // Datas padrões dos formulários
+  const hj = new Date().toISOString().split('T')[0];
+  if (document.getElementById('r-data')) document.getElementById('r-data').value = hj;
+  if (document.getElementById('d-data')) document.getElementById('d-data').value = hj;
+
+  atualizarSelectsMembros();
+  renderBarraPerfil();
+  renderGerenciamentoMembros();
   renderCfgOrc();
   renderTudo();
+  verificarBloqueio();
 };
 
 // ══════════════════════════════════════════════
-//  SALVAR / CARREGAR
+//  PERSISTÊNCIA & MIGRAÇÃO TRANSPARENTE
 // ══════════════════════════════════════════════
-function salvarBD(){
-  localStorage.setItem('ff_bd',JSON.stringify(bd));
+function salvarBD() {
+  localStorage.setItem('ff_bd', JSON.stringify(bd));
 }
 
-function salvarCfg(){
-  cfg.pai=v('cfg-pai')||cfg.pai;
-  cfg.mae=v('cfg-mae')||cfg.mae;
-  cfg.filho=v('cfg-filho')||cfg.filho;
-  cfg.sp=parseFloat(v('cfg-sp'))||cfg.sp;
-  cfg.sm=parseFloat(v('cfg-sm'))||cfg.sm;
-  cfg.mf=parseFloat(v('cfg-mf'))||cfg.mf;
-  localStorage.setItem('ff_cfg',JSON.stringify(cfg));
+function salvarCfg() {
+  localStorage.setItem('ff_cfg', JSON.stringify(cfg));
+  aplicarTema();
+  atualizarSelectsMembros();
+  renderBarraPerfil();
+  renderGerenciamentoMembros();
   renderTudo();
-  notif('✅ Configurações salvas!','ok');
 }
 
-function carregarTudo(){
-  const rc=localStorage.getItem('ff_cfg');
-  const rb=localStorage.getItem('ff_bd');
-  if(rc) cfg={...cfg,...JSON.parse(rc)};
-  if(rb){
-    const s=JSON.parse(rb);
-    bd.receitas=s.receitas||[];
-    bd.despesas=s.despesas||[];
-    bd.fixos=s.fixos||[];
-    bd.metas=s.metas||[];
-    bd.pagamentos=s.pagamentos||{};
+function carregarTudo() {
+  const rc = localStorage.getItem('ff_cfg');
+  const rb = localStorage.getItem('ff_bd');
+
+  if (rc) {
+    try {
+      const parsedCfg = JSON.parse(rc);
+      // Migração de schema legado {pai, mae, filho, sp, sm, mf} para {membros: [...]}
+      if (!parsedCfg.membros && (parsedCfg.pai || parsedCfg.mae)) {
+        cfg.membros = [
+          { id: 'pai', nome: parsedCfg.pai || 'Pai', icone: '👨', rendaMensal: parsedCfg.sp || 5000, cor: '#3a7bd5' },
+          { id: 'mae', nome: parsedCfg.mae || 'Mãe', icone: '👩', rendaMensal: parsedCfg.sm || 4000, cor: '#e94560' },
+          { id: 'filho', nome: parsedCfg.filho || 'Filho', icone: '👦', rendaMensal: parsedCfg.mf || 200, cor: '#f7971e' },
+          { id: 'familia', nome: 'Família (Conjunto)', icone: '👨‍👩‍👦', rendaMensal: 0, cor: '#38ef7d' }
+        ];
+        if (parsedCfg.orc) cfg.orc = { ...cfg.orc, ...parsedCfg.orc };
+        salvarCfg();
+      } else {
+        cfg = { ...cfg, ...parsedCfg };
+      }
+    } catch (e) {
+      console.error('Erro ao ler configurações:', e);
+    }
+  }
+
+  if (rb) {
+    try {
+      const s = JSON.parse(rb);
+      bd.receitas = s.receitas || [];
+      bd.despesas = s.despesas || [];
+      bd.fixos = s.fixos || [];
+      bd.metas = s.metas || [];
+      bd.pagamentos = s.pagamentos || {};
+      bd.recebiveis = s.recebiveis || [];
+      bd.dividas = s.dividas || [];
+    } catch (e) {
+      console.error('Erro ao ler banco de dados:', e);
+    }
+  }
+  importarDadosExcelUmaVez();
+}
+
+// ══════════════════════════════════════════════
+//  HELPERS BASE & FORMATAÇÃO
+// ══════════════════════════════════════════════
+function v(id) {
+  const e = document.getElementById(id);
+  return e ? e.value : '';
+}
+
+function sv(id, val) {
+  const e = document.getElementById(id);
+  if (e) e.value = val;
+}
+
+function set(id, val) {
+  const e = document.getElementById(id);
+  if (e) e.textContent = val;
+}
+
+function fmt(valor) {
+  return (valor || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function obterMembro(id) {
+  return cfg.membros.find(m => m.id === id) || { id, nome: id, icone: '👤', rendaMensal: 0, cor: '#aaa' };
+}
+
+function nomeMem(membroId) {
+  const m = obterMembro(membroId);
+  return `${m.icone} ${m.nome}`;
+}
+
+// Chave única para controle de status de pagamento: fixoId + ano + mes
+function chavePag(fixoId, m = mes, a = ano) {
+  return `${fixoId}-${a}-${m}`;
+}
+
+function getPag(fixoId, m = mes, a = ano) {
+  return bd.pagamentos[chavePag(fixoId, m, a)] || { pago: false, dataPag: '', valorPago: 0 };
+}
+
+// ══════════════════════════════════════════════
+//  GESTÃO FLEXÍVEL DE MEMBROS
+// ══════════════════════════════════════════════
+function atualizarSelectsMembros() {
+  const selects = ['r-memb', 'd-memb', 'fx-memb'];
+  selects.forEach(sId => {
+    const el = document.getElementById(sId);
+    if (!el) return;
+    const curVal = el.value;
+    el.innerHTML = cfg.membros.map(m => `<option value="${m.id}">${m.icone} ${m.nome}</option>`).join('');
+    if (cfg.membros.some(m => m.id === curVal)) {
+      el.value = curVal;
+    }
+  });
+
+  // Atualizar botões de filtro no Lançar
+  const barFiltros = document.getElementById('bar-filtros-lanc');
+  if (barFiltros) {
+    const fixosBtns = `
+      <button class="fb ${filtro==='todos'?'on':''}" onclick="setFil('todos',this)">Todos</button>
+      <button class="fb ${filtro==='rec'?'on':''}" onclick="setFil('rec',this)">💚 Receitas</button>
+      <button class="fb ${filtro==='desp'?'on':''}" onclick="setFil('desp',this)">❤️ Despesas</button>
+      <button class="fb ${filtro==='fixos'?'on':''}" onclick="setFil('fixos',this)">🔒 Fixos</button>
+    `;
+    const memBtns = cfg.membros.map(m => `
+      <button class="fb ${filtro===m.id?'on':''}" onclick="setFil('${m.id}',this)">${m.icone} ${m.nome}</button>
+    `).join('');
+    barFiltros.innerHTML = fixosBtns + memBtns;
   }
 }
 
-function carregarCfgUI(){
-  sv('cfg-pai',cfg.pai);sv('cfg-mae',cfg.mae);sv('cfg-filho',cfg.filho);
-  sv('cfg-sp',cfg.sp);sv('cfg-sm',cfg.sm);sv('cfg-mf',cfg.mf);
+function renderBarraPerfil() {
+  const c = document.getElementById('bar-perfil-chips');
+  if (!c) return;
+  let html = `<button class="pchip ${membroVisualizacao==='todos'?'on':''}" onclick="selecionarMembroVisualizacao('todos')">👨‍👩‍👧‍👦 Todos (Geral)</button>`;
+  cfg.membros.forEach(m => {
+    html += `<button class="pchip ${membroVisualizacao===m.id?'on':''}" onclick="selecionarMembroVisualizacao('${m.id}')">${m.icone} ${m.nome}</button>`;
+  });
+  c.innerHTML = html;
+}
+
+function selecionarMembroVisualizacao(mId) {
+  membroVisualizacao = mId;
+  renderBarraPerfil();
+  renderTudo();
+  if (mId === 'todos') {
+    notif('Mostrando finanças de todos os membros', 'info');
+  } else {
+    const m = obterMembro(mId);
+    notif(`Filtrado por: ${m.icone} ${m.nome}`, 'info');
+  }
+}
+
+function renderGerenciamentoMembros() {
+  const cont = document.getElementById('lista-membros-gerenciamento');
+  if (!cont) return;
+
+  cont.innerHTML = cfg.membros.map((m, idx) => `
+    <div class="membro-card">
+      <div class="membro-header">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <input type="text" value="${m.icone}" id="mem-ico-${m.id}" style="width:38px;text-align:center;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:white;border-radius:8px;padding:4px;font-size:1.1rem;" onchange="atualizarDadosMembro('${m.id}')">
+          <input type="text" value="${m.nome}" id="mem-nom-${m.id}" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:white;border-radius:8px;padding:6px 10px;font-size:.85rem;font-weight:700;" onchange="atualizarDadosMembro('${m.id}')">
+        </div>
+        ${m.id !== 'familia' ? `
+          <button onclick="removerMembro('${m.id}')" style="background:rgba(239,68,68,.2);border:1px solid rgba(239,68,68,.4);color:#fca5a5;padding:4px 8px;border-radius:8px;font-size:.7rem;cursor:pointer;">Excluir</button>
+        ` : `<span style="font-size:.7rem;color:rgba(255,255,255,.4);">Conta Conjunta</span>`}
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
+        <span style="font-size:.78rem;color:rgba(255,255,255,.6);">Renda / Salário Base:</span>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <span style="font-size:.75rem;color:#38ef7d;">R$</span>
+          <input type="number" step="0.01" value="${m.rendaMensal || 0}" id="mem-ren-${m.id}" style="width:110px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#38ef7d;border-radius:8px;padding:5px 8px;font-size:.85rem;font-weight:700;text-align:right;" onchange="atualizarDadosMembro('${m.id}')">
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function atualizarDadosMembro(id) {
+  const m = cfg.membros.find(x => x.id === id);
+  if (!m) return;
+  const icoEl = document.getElementById(`mem-ico-${id}`);
+  const nomEl = document.getElementById(`mem-nom-${id}`);
+  const renEl = document.getElementById(`mem-ren-${id}`);
+
+  if (icoEl) m.icone = icoEl.value.trim() || '👤';
+  if (nomEl) m.nome = nomEl.value.trim() || id;
+  if (renEl) m.rendaMensal = parseFloat(renEl.value) || 0;
+
+  salvarCfg();
+  notif('✅ Membro atualizado!', 'ok');
+}
+
+function abrirModalNovoMembro() {
+  const nome = prompt('Nome do novo membro da família (ex: Filha, Vovó, Casal):');
+  if (!nome || !nome.trim()) return;
+
+  const icone = prompt('Ícone/Emoji para representar (ex: 👧, 👵, 🧑, 💼):', '👤') || '👤';
+  const renda = parseFloat(prompt('Renda/Salário ou mesada mensal estimada R$ (opcional):', '0')) || 0;
+
+  const novoId = 'm_' + Date.now().toString(36);
+  cfg.membros.push({
+    id: novoId,
+    nome: nome.trim(),
+    icone: icone.trim(),
+    rendaMensal: renda,
+    cor: '#a18cd1'
+  });
+
+  salvarCfg();
+  notif(`✅ ${icone} ${nome} adicionado com sucesso!`, 'ok');
+}
+
+function removerMembro(id) {
+  if (id === 'familia') {
+    alert('A categoria conjunta da Família não pode ser excluída.');
+    return;
+  }
+  const m = obterMembro(id);
+  if (confirm(`Deseja remover ${m.icone} ${m.nome}?\nOs lançamentos já registrados continuarão visíveis no histórico.`)) {
+    cfg.membros = cfg.membros.filter(x => x.id !== id);
+    if (membroVisualizacao === id) membroVisualizacao = 'todos';
+    salvarCfg();
+    notif('Membro removido da lista!', 'info');
+  }
 }
 
 // ══════════════════════════════════════════════
-//  HELPERS BASE
+//  FILTROS DE DATA E ESCOPO
 // ══════════════════════════════════════════════
-function v(id){const e=document.getElementById(id);return e?e.value:'';}
-function sv(id,val){const e=document.getElementById(id);if(e)e.value=val;}
-function set(id,val){const e=document.getElementById(id);if(e)e.textContent=val;}
-function fmt(v){return(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
-function nomeMem(m){return{pai:cfg.pai,mae:cfg.mae,filho:cfg.filho,familia:'Família'}[m]||m;}
-function recMes(m=mes,a=ano){return bd.receitas.filter(r=>r.mes===m&&r.ano===a);}
-function despMes(m=mes,a=ano){return bd.despesas.filter(d=>d.mes===m&&d.ano===a);}
-function fixosDesp(){return bd.fixos.filter(f=>f.tipo==='despesa');}
-function fixosRec(){return bd.fixos.filter(f=>f.tipo==='receita');}
-function totFixDesp(){return fixosDesp().reduce((s,f)=>s+f.valor,0);}
-function totFixRec(){return fixosRec().reduce((s,f)=>s+f.valor,0);}
+function filtrarPorMembro(item) {
+  if (membroVisualizacao === 'todos') return true;
+  return item.membro === membroVisualizacao;
+}
 
-// Chave de pagamento: fixoId + mes + ano
-function chavePag(fixoId,m=mes,a=ano){return `${fixoId}-${a}-${m}`;}
-function getPag(fixoId,m=mes,a=ano){return bd.pagamentos[chavePag(fixoId,m,a)]||{pago:false,dataPag:'',valorPago:0};}
+function recMes(m = mes, a = ano) {
+  const manuais = bd.receitas.filter(r => r.mes === m && r.ano === a);
+  const recebiveis = (bd.recebiveis || []).filter(r => r.mes === m && r.ano === a);
+  return [...manuais, ...recebiveis].filter(filtrarPorMembro);
+}
+
+function despMes(m = mes, a = ano) {
+  return bd.despesas.filter(d => d.mes === m && d.ano === a && filtrarPorMembro(d));
+}
+
+function fixosDesp() {
+  return bd.fixos.filter(f => f.tipo === 'despesa' && filtrarPorMembro(f));
+}
+
+function fixosRec() {
+  return bd.fixos.filter(f => f.tipo === 'receita' && filtrarPorMembro(f));
+}
+
+function totFixDesp() {
+  return fixosDesp().reduce((s, f) => s + f.valor, 0);
+}
+
+function totFixRec() {
+  return fixosRec().reduce((s, f) => s + f.valor, 0);
+}
 
 // ══════════════════════════════════════════════
 //  TOTAIS COM PAGAMENTOS
 // ══════════════════════════════════════════════
-function calcTotais(m=mes,a=ano){
-  const recs=recMes(m,a);
-  const desps=despMes(m,a);
-  const fds=fixosDesp();
-  const frs=fixosRec();
+function calcTotais(m = mes, a = ano) {
+  const recs = recMes(m, a);
+  const desps = despMes(m, a);
+  const fds = fixosDesp();
+  const frs = fixosRec();
 
-  // Total receitas = manuais + fixas
-  const tRecMan=recs.reduce((s,r)=>s+r.valor,0);
-  const tRecFix=frs.reduce((s,f)=>s+f.valor,0);
-  const tRec=tRecMan+tRecFix;
+  // Receitas manuais + fixas
+  const totRec = recs.reduce((s, r) => s + r.valor, 0) + frs.reduce((s, f) => s + f.valor, 0);
 
-  // Total despesas = manuais + fixas
-  const tDespMan=desps.reduce((s,d)=>s+d.valor,0);
-  const tDespFix=fds.reduce((s,f)=>s+f.valor,0);
-  const tDesp=tDespMan+tDespFix;
+  // Despesas manuais (não fixas)
+  const totDespVar = desps.reduce((s, d) => s + d.valor, 0);
 
-  // Pagamentos confirmados (fixos)
-  let totalPago=0;
-  fds.forEach(f=>{
-    const p=getPag(f.id,m,a);
-    if(p.pago) totalPago+=p.valorPago||f.valor;
+  // Despesas fixas (previstas)
+  const totDespFix = fds.reduce((s, f) => s + f.valor, 0);
+
+  // Total geral de despesas previstas no mês
+  const totDesp = totDespVar + totDespFix;
+
+  // Total já pago: pagamentos confirmados de fixas + pagamentos confirmados de variáveis
+  let totPago = 0;
+  let qtdPagas = 0;
+  let qtdPend = 0;
+
+  fds.forEach(f => {
+    const pag = getPag(f.id, m, a);
+    if (pag.pago) {
+      totPago += f.valor;
+      qtdPagas++;
+    } else {
+      qtdPend++;
+    }
   });
-  // Despesas manuais pagas
-  desps.forEach(d=>{
-    const p=getPag(d.id,m,a);
-    if(p.pago) totalPago+=p.valorPago||d.valor;
+
+  desps.forEach(d => {
+    const pag = getPag(d.id, m, a);
+    if (pag.pago) {
+      totPago += d.valor;
+      qtdPagas++;
+    } else {
+      qtdPend++;
+    }
   });
 
-  const saldo=tRec-tDesp;
-  const eco=tRec>0?((saldo/tRec)*100):0;
-  const faltaPagar=tDesp-totalPago;
-  const pctPago=tDesp>0?(totalPago/tDesp)*100:0;
+  const totFalta = Math.max(0, totDesp - totPago);
+  const saldo = totRec - totDesp;
+  const pctEco = totRec > 0 ? Math.max(0, ((saldo / totRec) * 100)).toFixed(1) : '0.0';
+  const pctPago = totDesp > 0 ? ((totPago / totDesp) * 100).toFixed(0) : '0';
 
-  // Contar itens
-  const qPagas=fds.filter(f=>getPag(f.id,m,a).pago).length
-    + desps.filter(d=>getPag(d.id,m,a).pago).length;
-  const qPend=(fds.length+desps.length)-qPagas;
-
-  return{tRec,tDesp,tRecFix,tDespFix,tRecMan,tDespMan,
-    saldo,eco,totalPago,faltaPagar,pctPago,qPagas,qPend};
+  return {
+    totRec,
+    totDesp,
+    totDespFix,
+    totDespVar,
+    saldo,
+    pctEco,
+    totPago,
+    totFalta,
+    pctPago,
+    qtdPagas,
+    qtdPend
+  };
 }
 
 // ══════════════════════════════════════════════
-//  RECEITAS
+//  RENDERIZAÇÃO GERAL
 // ══════════════════════════════════════════════
-function addRec(){
-  const desc=v('r-desc').trim();
-  const val=parseFloat(v('r-val'));
-  const data=v('r-data');
-  const cat=v('r-cat');
-  const memb=v('r-memb');
-  const fixo=v('r-fixo')==='sim';
-  if(!desc||isNaN(val)||val<=0){notif('Preencha descrição e valor!','err');return;}
-
-  const item={id:'r'+Date.now(),desc,valor:val,cat,membro:memb,
-    data,mes,ano,tipo:'receita',fixo,ts:Date.now()};
-  bd.receitas.push(item);
-
-  // Se marcado como fixo, adicionar nos fixos também
-  if(fixo){
-    bd.fixos.push({id:'f'+Date.now(),tipo:'receita',desc,valor:val,
-      cat,membro:memb,diaVenc:parseInt(data.split('-')[2])||5});
-    notif('🔄 Receita fixa cadastrada para todo mês!','info');
-  }
-
-  salvarBD();
-  sv('r-desc','');sv('r-val','');
-  renderTudo();
-  if(!fixo) notif('✅ Receita salva!','ok');
-}
-
-function delRec(id){
-  bd.receitas=bd.receitas.filter(r=>r.id!==id);
-  salvarBD();renderTudo();notif('🗑️ Removida!','ok');
-}
-
-// ══════════════════════════════════════════════
-//  DESPESAS
-// ══════════════════════════════════════════════
-function addDesp(){
-  const desc=v('d-desc').trim();
-  const val=parseFloat(v('d-val'));
-  const data=v('d-data');
-  const cat=v('d-cat');
-  const memb=v('d-memb');
-  const tipo=v('d-tipo');
-  if(!desc||isNaN(val)||val<=0){notif('Preencha descrição e valor!','err');return;}
-
-  const item={id:'d'+Date.now(),desc,valor:val,cat,membro:memb,
-    data,mes,ano,tipo:'despesa',fixo:tipo==='fixo',ts:Date.now()};
-  bd.despesas.push(item);
-
-  if(tipo==='fixo'){
-    bd.fixos.push({id:'f'+Date.now(),tipo:'despesa',desc,valor:val,
-      cat,membro:memb,diaVenc:parseInt(data.split('-')[2])||10});
-    notif('🔒 Despesa fixa cadastrada para todo mês!','info');
-  }
-
-  salvarBD();
-  sv('d-desc','');sv('d-val','');
-  renderTudo();
-  if(tipo!=='fixo') notif('✅ Despesa salva!','ok');
-}
-
-function delDesp(id){
-  bd.despesas=bd.despesas.filter(d=>d.id!==id);
-  salvarBD();renderTudo();notif('🗑️ Removida!','ok');
-}
-
-// ══════════════════════════════════════════════
-//  FIXOS
-// ══════════════════════════════════════════════
-function addFixo(){
-  const tipo=v('fx-tipo');
-  const desc=v('fx-desc').trim();
-  const val=parseFloat(v('fx-val'));
-  const cat=v('fx-cat');
-  const memb=v('fx-memb');
-  const dia=parseInt(v('fx-dia'));
-  if(!desc||isNaN(val)||val<=0){notif('Preencha todos os campos!','err');return;}
-  bd.fixos.push({id:'f'+Date.now(),tipo,desc,valor:val,cat,membro:memb,diaVenc:dia});
-  salvarBD();
-  sv('fx-desc','');sv('fx-val','');
-  renderFixos();renderExcFixos();renderPagar();
-  notif('🔒 Item fixo salvo!','ok');
-}
-
-function delFixo(id){
-  bd.fixos=bd.fixos.filter(f=>f.id!==id);
-  // Limpar pagamentos desse fixo
-  Object.keys(bd.pagamentos).forEach(k=>{if(k.startsWith(id)) delete bd.pagamentos[k];});
-  salvarBD();renderFixos();renderExcFixos();renderPagar();renderCards();
-  notif('🗑️ Removido!','ok');
-}
-
-// ══════════════════════════════════════════════
-//  PAGAMENTOS — CONFIRMAR / DESFAZER
-// ══════════════════════════════════════════════
-function togglePag(itemId, isFixo, valor){
-  const ch=chavePag(itemId);
-  const atual=bd.pagamentos[ch]||{pago:false};
-  const novoEstado=!atual.pago;
-
-  if(novoEstado){
-    bd.pagamentos[ch]={
-      pago:true,
-      dataPag:new Date().toISOString().split('T')[0],
-      valorPago:valor
-    };
-    notif('✅ Pagamento confirmado! R$ '+fmt(valor)+' abatido','ok');
-  } else {
-    bd.pagamentos[ch]={pago:false,dataPag:'',valorPago:0};
-    notif('↩️ Pagamento desfeito!','info');
-  }
-
-  salvarBD();
-  renderTudo();
-}
-
-// ══════════════════════════════════════════════
-//  METAS
-// ══════════════════════════════════════════════
-function addMeta(){
-  const nome=v('m-nome').trim();
-  const total=parseFloat(v('m-total'));
-  const atual=parseFloat(v('m-atual'))||0;
-  const prazo=v('m-prazo');
-  if(!nome||isNaN(total)||total<=0){notif('Preencha nome e valor!','err');return;}
-  bd.metas.push({id:'m'+Date.now(),nome,total,atual,prazo,ts:Date.now()});
-  salvarBD();
-  sv('m-nome','');sv('m-total','');sv('m-atual','');
-  renderMetas();notif('🎯 Meta criada!','ok');
-}
-
-function updMeta(id,val){
-  const m=bd.metas.find(x=>x.id===id);
-  if(m){m.atual=parseFloat(val)||0;salvarBD();renderMetas();}
-}
-
-function delMeta(id){
-  bd.metas=bd.metas.filter(m=>m.id!==id);
-  salvarBD();renderMetas();notif('🗑️ Meta removida!','ok');
-}
-
-// ══════════════════════════════════════════════
-//  RENDER TUDO
-// ══════════════════════════════════════════════
-function renderTudo(){
+function renderTudo() {
   renderCards();
-  renderHome();
+  renderHomePagamentos();
+  renderUltimosLanc();
+  renderAlertas();
   renderLanc();
   renderFixos();
   renderExcFixos();
@@ -789,839 +1008,953 @@ function renderTudo(){
   renderExcResumo();
   renderPorMembro();
   renderMetas();
-  renderAlertas();
+  renderRecebiveisResumo();
+}
+
+function renderCards() {
+  const t = calcTotais();
+  set('cv-rec', 'R$ ' + fmt(t.totRec));
+  set('cv-desp', 'R$ ' + fmt(t.totDesp));
+
+  const salEl = document.getElementById('cv-sal');
+  if (salEl) {
+    salEl.textContent = 'R$ ' + fmt(t.saldo);
+    salEl.style.color = t.saldo >= 0 ? '#38ef7d' : '#ff6b6b';
+  }
+
+  set('cv-eco', t.pctEco + '%');
+  set('cv-pagas', t.qtdPagas + ' itens');
+  set('cv-pend', t.qtdPend + ' itens');
+}
+
+function renderHomePagamentos() {
+  const t = calcTotais();
+  set('mes-label-home', MESES[mes] + '/' + ano);
+  set('home-total-desp', 'R$ ' + fmt(t.totDesp));
+  set('home-total-pago', 'R$ ' + fmt(t.totPago));
+  set('home-total-falta', 'R$ ' + fmt(t.totFalta));
+
+  const progEl = document.getElementById('home-prog-pag');
+  if (progEl) progEl.style.width = t.pctPago + '%';
+  set('home-prog-label', t.pctPago + '% pago');
+}
+
+function renderUltimosLanc() {
+  const c = document.getElementById('lista-home');
+  if (!c) return;
+
+  const recs = recMes().map(r => ({ ...r, tipoItem: 'rec' }));
+  const desps = despMes().map(d => ({ ...d, tipoItem: 'desp' }));
+  const todos = [...recs, ...desps].sort((a, b) => (b.ts || 0) - (a.ts || 0)).slice(0, 5);
+
+  if (todos.length === 0) {
+    c.innerHTML = '<div style="color:rgba(255,255,255,.3);font-size:.8rem;text-align:center;padding:12px">Nenhum lançamento manual este mês</div>';
+    return;
+  }
+
+  c.innerHTML = todos.map(it => {
+    const isR = it.tipoItem === 'rec';
+    const memb = obterMembro(it.membro);
+    return `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.82rem">
+        <div>
+          <span style="font-weight:600">${isR ? '💚' : '❤️'} ${it.desc}</span>
+          <span class="tag-membro" style="background:${memb.cor}22;color:${memb.cor};border:1px solid ${memb.cor}44">${memb.icone} ${memb.nome}</span>
+          <div style="font-size:.7rem;color:rgba(255,255,255,.4)">${it.data || ''} · ${CDESP[it.cat] || CREC[it.cat] || it.cat}</div>
+        </div>
+        <span style="font-weight:700;color:${isR ? '#38ef7d' : '#ff6b6b'}">${isR ? '+' : '-'} R$ ${fmt(it.valor)}</span>
+      </div>`;
+  }).join('');
+}
+
+function renderAlertas() {
+  const c = document.getElementById('alertas');
+  if (!c) return;
+  const desps = despMes();
+  const fds = fixosDesp();
+  const alertas = [];
+
+  Object.entries(cfg.orc).forEach(([cat, lim]) => {
+    if (!lim) return;
+    const gastoVar = desps.filter(d => d.cat === cat).reduce((s, d) => s + d.valor, 0);
+    const gastoFix = fds.filter(f => f.cat === cat).reduce((s, f) => s + f.valor, 0);
+    const tot = gastoVar + gastoFix;
+    const pct = (tot / lim) * 100;
+    if (pct >= 100) {
+      alertas.push(`<div style="color:#ff6b6b;padding:5px 0;font-size:.8rem">🔴 <b>${CDESP[cat] || cat}</b> estourou o limite! (R$ ${fmt(tot)} / R$ ${fmt(lim)})</div>`);
+    } else if (pct >= 80) {
+      alertas.push(`<div style="color:#ffd200;padding:5px 0;font-size:.8rem">🟡 <b>${CDESP[cat] || cat}</b> atingiu ${pct.toFixed(0)}% do limite!</div>`);
+    }
+  });
+
+  c.innerHTML = alertas.length > 0 ? alertas.join('') : '<div style="color:#38ef7d;font-size:.8rem">✅ Orçamentos dentro do limite!</div>';
 }
 
 // ══════════════════════════════════════════════
-//  CARDS
+//  LANÇAMENTOS
 // ══════════════════════════════════════════════
-function renderCards(){
-  const t=calcTotais();
-  set('cv-rec','R$ '+fmt(t.tRec));
-  set('cv-desp','R$ '+fmt(t.tDesp));
-  const se=document.getElementById('cv-saldo');
-  se.textContent='R$ '+fmt(t.saldo);
-  se.style.color=t.saldo>=0?'#38ef7d':'#ff6b6b';
-  const ee=document.getElementById('cv-eco');
-  ee.textContent=t.eco.toFixed(1)+'%';
-  ee.style.color=t.eco>=20?'#38ef7d':t.eco>=10?'#ffd200':'#ff6b6b';
-  set('cv-pagas',t.qPagas+' itens');
-  const pe=document.getElementById('cv-pend');
-  pe.textContent=t.qPend+' itens';
-  pe.style.color=t.qPend>0?'#ffd200':'#38ef7d';
+function addRec() {
+  const desc = v('r-desc').trim();
+  const val = parseFloat(v('r-val'));
+  const data = v('r-data') || new Date().toISOString().split('T')[0];
+  const cat = v('r-cat');
+  const memb = v('r-memb');
+  const fixo = v('r-fixo') === 'sim';
 
-  // Resumo pagamento no home
-  const ml=document.getElementById('mes-label-home');
-  if(ml) ml.textContent=MESES[mes]+'/'+ano;
-  set('home-total-desp','R$ '+fmt(t.tDesp));
-  set('home-total-pago','R$ '+fmt(t.totalPago));
-  const fe=document.getElementById('home-total-falta');
-  if(fe){fe.textContent='R$ '+fmt(t.faltaPagar);fe.style.color=t.faltaPagar>0?'#ffd200':'#38ef7d';}
-  const pp=document.getElementById('home-prog-pag');
-  if(pp) pp.style.width=Math.min(100,t.pctPago).toFixed(1)+'%';
-  set('home-prog-label',t.pctPago.toFixed(1)+'% pago');
-}
+  if (!desc || isNaN(val) || val <= 0) {
+    notif('Preencha descrição e valor válido!', 'err');
+    return;
+  }
 
-// ══════════════════════════════════════════════
-//  HOME
-// ══════════════════════════════════════════════
-function renderHome(){
-  const recs=recMes().map(r=>({...r,_t:'rec'}));
-  const desps=despMes().map(d=>({...d,_t:'desp'}));
-  const todos=[...recs,...desps].sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,6);
-  const c=document.getElementById('lista-home');
-  c.innerHTML=todos.length
-    ?todos.map(i=>itemHTML(i,false)).join('')
-    :'<div class="vazio">Nenhum lançamento manual este mês</div>';
-}
-
-// ══════════════════════════════════════════════
-//  LISTA LANÇAMENTOS
-// ══════════════════════════════════════════════
-function renderLanc(){
-  const fds=fixosDesp();
-  const frs=fixosRec();
-  let todos=[
-    ...recMes().map(r=>({...r,_t:'rec',_fixo:false})),
-    ...despMes().map(d=>({...d,_t:'desp',_fixo:false})),
-    ...fds.map(f=>({...f,_t:'desp',_fixo:true,mes,ano,ts:f.ts||0})),
-    ...frs.map(f=>({...f,_t:'rec',_fixo:true,mes,ano,ts:f.ts||0}))
-  ].sort((a,b)=>(b.ts||0)-(a.ts||0));
-
-  if(filtro==='rec') todos=todos.filter(t=>t._t==='rec');
-  else if(filtro==='desp') todos=todos.filter(t=>t._t==='desp');
-  else if(filtro==='fixos') todos=todos.filter(t=>t._fixo);
-  else if(['pai','mae','filho'].includes(filtro)) todos=todos.filter(t=>t.membro===filtro);
-
-  set('qtd-lanc',todos.length+' registros');
-  const c=document.getElementById('lista-lanc');
-  c.innerHTML=todos.length
-    ?todos.map(i=>itemHTML(i,!i._fixo)).join('')
-    :'<div class="vazio">Nenhum lançamento</div>';
-}
-
-function itemHTML(it,comDel=false){
-  const isR=it._t==='rec'||it.tipo==='receita';
-  const cat=isR?(CREC[it.cat]||it.cat):(CDESP[it.cat]||it.cat);
-  const pag=getPag(it.id);
-  const isFixo=it._fixo||it.fixo;
-  const fixBadge=isFixo?`<span class="${isR?'badge-rec-fix':'badge-fix'}">${isR?'🔄 Rec.Fixa':'🔒 Fixo'}</span> `:'';
-  const pagBadge=!isR?(pag.pago?'<span class="badge-pago">✅ PAGO</span>':'<span class="badge-pend">⏳ PENDENTE</span>'):'';
-  const delBtn=comDel?`<button class="del" onclick="${isR?'delRec':'delDesp'}('${it.id}')">✕</button>`:'';
-
-  return`<div class="item ${pag.pago&&!isR?'pago':''}">
-    <div class="item-ic" style="background:${isR?'rgba(0,210,255,.15)':'rgba(233,69,96,.15)'}">${isR?'💚':'❤️'}</div>
-    <div class="item-inf">
-      <div class="item-desc">${it.desc}</div>
-      <div class="item-sub">${fixBadge}${cat} • ${nomeMem(it.membro)} • ${it.data||'Todo mês'} ${pagBadge}</div>
-    </div>
-    <div class="item-val ${isR?'vp':'vn'}">${isR?'+':'-'} R$ ${fmt(it.valor)}</div>
-    ${delBtn}
-  </div>`;
-}
-
-// ══════════════════════════════════════════════
-//  FIXOS
-// ══════════════════════════════════════════════
-function renderFixos(){
-  const fd=fixosDesp();
-  const fr=fixosRec();
-
-  const mkD=f=>{
-    const p=getPag(f.id);
-    return`<div class="fix-item">
-      <div class="item-ic" style="background:rgba(233,69,96,.15)">❤️</div>
-      <div class="item-inf">
-        <div class="item-desc">${f.desc}</div>
-        <div class="item-sub">${CDESP[f.cat]||f.cat} • Venc. dia ${f.diaVenc||'—'} • ${nomeMem(f.membro)}</div>
-      </div>
-      <div class="fix-right">
-        <span class="vn" style="font-weight:700">R$ ${fmt(f.valor)}</span>
-        <span class="badge-fix">🔒 Todo mês</span>
-        <button class="del" onclick="delFixo('${f.id}')">✕</button>
-      </div>
-    </div>`;
+  const item = {
+    id: 'r' + Date.now(),
+    desc,
+    valor: val,
+    cat,
+    membro: memb,
+    data,
+    mes,
+    ano,
+    tipo: 'receita',
+    fixo,
+    ts: Date.now()
   };
 
-  const mkR=f=>`<div class="fix-item">
-    <div class="item-ic" style="background:rgba(0,210,255,.15)">💚</div>
-    <div class="item-inf">
-      <div class="item-desc">${f.desc}</div>
-      <div class="item-sub">${CREC[f.cat]||CDESP[f.cat]||f.cat} • Dia ${f.diaVenc||'—'} • ${nomeMem(f.membro)}</div>
-    </div>
-    <div class="fix-right">
-      <span class="vp" style="font-weight:700">R$ ${fmt(f.valor)}</span>
-      <span class="badge-rec-fix">🔄 Todo mês</span>
-      <button class="del" onclick="delFixo('${f.id}')">✕</button>
-    </div>
-  </div>`;
+  bd.receitas.push(item);
 
-  document.getElementById('lista-fix-d').innerHTML=fd.length?fd.map(mkD).join(''):'<div class="vazio">Nenhuma despesa fixa cadastrada</div>';
-  document.getElementById('lista-fix-r').innerHTML=fr.length?fr.map(mkR).join(''):'<div class="vazio">Nenhuma receita fixa cadastrada</div>';
-}
-
-// ══════════════════════════════════════════════
-//  RENDER PAGAMENTOS (aba Pagar)
-// ══════════════════════════════════════════════
-function renderPagar(){
-  const t=calcTotais();
-  const ml=document.getElementById('mes-pag-label');
-  if(ml) ml.textContent=MESES[mes]+'/'+ano;
-
-  // Cards pagamento
-  set('pag-total','R$ '+fmt(t.tDesp));
-  set('pag-pago','R$ '+fmt(t.totalPago));
-  const pe=document.getElementById('pag-pend');
-  if(pe){pe.textContent='R$ '+fmt(t.faltaPagar);pe.style.color=t.faltaPagar>0?'#ffd200':'#38ef7d';}
-  const pp=document.getElementById('prog-pag');
-  if(pp) pp.style.width=Math.min(100,t.pctPago).toFixed(1)+'%';
-  set('prog-label-val','R$ '+fmt(t.totalPago)+' pago');
-  set('prog-label-pct',t.pctPago.toFixed(1)+'%');
-
-  // ── DESPESAS FIXAS ──
-  const fd=fixosDesp();
-  const listFix=document.getElementById('pag-lista-fix');
-  if(listFix){
-    listFix.innerHTML=fd.length?fd.map(f=>{
-      const p=getPag(f.id);
-      return pagItemHTML(f.id,f.desc,f.valor,f.cat,f.diaVenc,p,true,'desp');
-    }).join(''):'<div class="vazio">Nenhuma despesa fixa cadastrada</div>';
+  if (fixo) {
+    bd.fixos.push({
+      id: 'f' + Date.now(),
+      tipo: 'receita',
+      desc,
+      valor: val,
+      cat,
+      membro: memb,
+      diaVenc: parseInt(data.split('-')[2]) || 5
+    });
+    notif('🔄 Receita cadastrada como fixa para todo mês!', 'info');
   }
 
-  // ── DESPESAS VARIÁVEIS ──
-  const dv=despMes();
-  const listVar=document.getElementById('pag-lista-var');
-  if(listVar){
-    listVar.innerHTML=dv.length?dv.map(d=>{
-      const p=getPag(d.id);
-      return pagItemHTML(d.id,d.desc,d.valor,d.cat,d.data,p,false,'desp');
-    }).join(''):'<div class="vazio">Nenhuma despesa variável este mês</div>';
+  salvarBD();
+  sv('r-desc', '');
+  sv('r-val', '');
+  renderTudo();
+  if (!fixo) notif('✅ Receita adicionada!', 'ok');
+}
+
+function delRec(id) {
+  bd.receitas = bd.receitas.filter(r => r.id !== id);
+  salvarBD();
+  renderTudo();
+  notif('🗑️ Receita removida!', 'ok');
+}
+
+function addDesp() {
+  const desc = v('d-desc').trim();
+  const val = parseFloat(v('d-val'));
+  const data = v('d-data') || new Date().toISOString().split('T')[0];
+  const cat = v('d-cat');
+  const memb = v('d-memb');
+  const tipo = v('d-tipo');
+
+  if (!desc || isNaN(val) || val <= 0) {
+    notif('Preencha descrição e valor válido!', 'err');
+    return;
   }
 
-  // ── RECEITAS FIXAS ──
-  const fr=fixosRec();
-  const listRec=document.getElementById('pag-lista-rec');
-  if(listRec){
-    listRec.innerHTML=fr.length?fr.map(f=>{
-      const p=getPag(f.id);
-      return pagItemHTML(f.id,f.desc,f.valor,f.cat,f.diaVenc,p,true,'rec');
-    }).join(''):'<div class="vazio">Nenhuma receita fixa cadastrada</div>';
+  const item = {
+    id: 'd' + Date.now(),
+    desc,
+    valor: val,
+    cat,
+    membro: memb,
+    data,
+    mes,
+    ano,
+    tipo: 'despesa',
+    fixo: tipo === 'fixo',
+    ts: Date.now()
+  };
+
+  bd.despesas.push(item);
+
+  if (tipo === 'fixo') {
+    bd.fixos.push({
+      id: 'f' + Date.now(),
+      tipo: 'despesa',
+      desc,
+      valor: val,
+      cat,
+      membro: memb,
+      diaVenc: parseInt(data.split('-')[2]) || 10
+    });
+    notif('🔒 Despesa cadastrada como fixa recorrente!', 'info');
   }
+
+  salvarBD();
+  sv('d-desc', '');
+  sv('d-val', '');
+  renderTudo();
+  if (tipo !== 'fixo') notif('✅ Despesa adicionada!', 'ok');
 }
 
-function pagItemHTML(id,desc,valor,cat,diaOuData,pag,isFixo,tipoItem){
-  const isRec=tipoItem==='rec';
-  const catLabel=isRec?(CREC[cat]||cat):(CDESP[cat]||cat);
-  const diaLabel=isFixo?`Venc. dia ${diaOuData}`:(diaOuData||'—');
-  const pago=pag.pago;
-
-  const chkClass=`chk${pago?' pago':''}`;
-  const badgeHTML=pago
-    ?`<span class="badge-pago">✅ ${isRec?'RECEBIDO':'PAGO'} em ${pag.dataPag||''}</span>`
-    :isRec
-      ?`<span class="badge-pend">⏳ A RECEBER</span>`
-      :`<span class="badge-pend">⏳ PENDENTE</span>`;
-
-  const btnLabel=pago?(isRec?'↩️ Desfazer Recebimento':'↩️ Desfazer Pagamento'):(isRec?'✅ Confirmar Recebimento':'✅ Confirmar Pagamento');
-  const btnColor=pago?'rgba(156,163,175,.2)':'rgba(56,239,125,.2)';
-  const btnBorder=pago?'rgba(156,163,175,.3)':'rgba(56,239,125,.4)';
-  const btnTextColor=pago?'rgba(255,255,255,.5)':'#38ef7d';
-
-  return`<div class="fix-item" style="flex-direction:column;align-items:stretch;gap:8px;${pago?'opacity:.75':''}">
-    <div style="display:flex;align-items:center;gap:9px">
-      <div class="item-ic" style="background:${isRec?'rgba(0,210,255,.15)':'rgba(233,69,96,.15)'}">${isRec?'💚':'❤️'}</div>
-      <div class="item-inf">
-        <div class="item-desc" style="${pago?'text-decoration:line-through;opacity:.7':''}">${desc}</div>
-        <div class="item-sub">${catLabel} • ${diaLabel} ${isFixo?'• 🔒 Fixo':''}</div>
-      </div>
-      <div class="item-val ${isRec?'vp':'vn'}" style="${pago?'text-decoration:line-through;opacity:.6':''}">
-        R$ ${fmt(valor)}
-      </div>
-    </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 4px">
-      ${badgeHTML}
-      <button onclick="togglePag('${id}',${isFixo},${valor})"
-        style="background:${btnColor};border:1px solid ${btnBorder};color:${btnTextColor};
-               padding:6px 12px;border-radius:8px;cursor:pointer;font-size:.78rem;font-weight:700;
-               transition:all .2s">
-        ${btnLabel}
-      </button>
-    </div>
-  </div>`;
+function delDesp(id) {
+  bd.despesas = bd.despesas.filter(d => d.id !== id);
+  salvarBD();
+  renderTudo();
+  notif('🗑️ Despesa removida!', 'ok');
 }
 
-// ══════════════════════════════════════════════
-//  EXCEL FIXOS
-// ══════════════════════════════════════════════
-function renderExcFixos(){
-  const fd=fixosDesp();
-  const cont=document.getElementById('exc-fixos');
-  if(!fd.length){cont.innerHTML='<div class="vazio">Nenhum item fixo</div>';return;}
-  let tot=0;
-  const rows=fd.map(f=>{
-    const a=f.valor*12;tot+=a;
-    return`<tr><td style="font-weight:600">${f.desc}</td>
-      ${Array(12).fill(`<td class="vn">R$ ${fmt(f.valor)}</td>`).join('')}
-      <td style="color:#ffd200;font-weight:700">R$ ${fmt(a)}</td></tr>`;
-  }).join('');
-  cont.innerHTML=`<table><thead><tr><th>Descrição</th>
-    ${MESES.map(m=>`<th>${m.slice(0,3)}</th>`).join('')}<th>Total Anual</th>
-  </tr></thead><tbody>${rows}</tbody>
-  <tfoot><tr><td>TOTAL</td>
-    ${Array(12).fill(`<td class="vn">R$ ${fmt(totFixDesp())}</td>`).join('')}
-    <td style="color:#ffd200">R$ ${fmt(tot)}</td>
-  </tr></tfoot></table>`;
-}
+function renderLanc() {
+  const c = document.getElementById('lista-lanc');
+  if (!c) return;
 
-// ══════════════════════════════════════════════
-//  ORÇAMENTO
-// ══════════════════════════════════════════════
-function renderOrc(){
-  const desps=despMes();
-  const gastos={};
-  desps.forEach(d=>{gastos[d.cat]=(gastos[d.cat]||0)+d.valor;});
-  fixosDesp().forEach(f=>{gastos[f.cat]=(gastos[f.cat]||0)+f.valor;});
-  document.getElementById('orcamento').innerHTML=Object.entries(CDESP).map(([k,n])=>{
-    const g=gastos[k]||0,l=cfg.orc[k]||0;
-    const p=l>0?Math.min(100,(g/l)*100).toFixed(0):0;
-    const cl=p>=100?'p-over':p>=80?'p-warn':'p-ok';
-    const ic=p>=100?'🚨':p>=80?'⚠️':'✅';
-    return`<div style="padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05)">
-      <div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:4px">
-        <span>${n}</span><span>${ic} R$ ${fmt(g)} / R$ ${fmt(l)}</span>
-      </div>
-      <div class="pb"><div class="pf ${cl}" style="width:${p}%"></div></div>
-    </div>`;
-  }).join('');
-}
+  const recs = recMes().map(r => ({ ...r, tipoItem: 'rec' }));
+  const desps = despMes().map(d => ({ ...d, tipoItem: 'desp' }));
+  let itens = [...recs, ...desps];
 
-// ══════════════════════════════════════════════
-//  ALERTAS
-// ══════════════════════════════════════════════
-function renderAlertas(){
-  const desps=despMes();
-  const gastos={};
-  desps.forEach(d=>{gastos[d.cat]=(gastos[d.cat]||0)+d.valor;});
-  fixosDesp().forEach(f=>{gastos[f.cat]=(gastos[f.cat]||0)+f.valor;});
-  let html='';
-  Object.entries(CDESP).forEach(([k,n])=>{
-    const g=gastos[k]||0,l=cfg.orc[k]||0;
-    const p=l>0?(g/l)*100:0;
-    if(p>=80) html+=`<div class="fix-item">
-      <div class="item-inf"><div class="item-desc">${p>=100?'🚨':'⚠️'} ${n}</div>
-      <div class="item-sub">R$ ${fmt(g)} de R$ ${fmt(l)}</div></div>
-      <span style="color:${p>=100?'#ff6b6b':'#ffd200'};font-weight:700">${p.toFixed(0)}%</span>
-    </div>`;
-  });
-  document.getElementById('alertas').innerHTML=html||'<div class="vazio">✅ Orçamentos dentro do limite!</div>';
-}
+  if (filtro === 'rec') itens = itens.filter(i => i.tipoItem === 'rec');
+  else if (filtro === 'desp') itens = itens.filter(i => i.tipoItem === 'desp');
+  else if (filtro === 'fixos') itens = itens.filter(i => i.fixo);
+  else if (filtro !== 'todos') itens = itens.filter(i => i.membro === filtro);
 
-// ══════════════════════════════════════════════
-//  EXCEL RESUMO ANUAL
-// ══════════════════════════════════════════════
-function renderExcResumo(){
-  let tR=0,tDF=0,tDV=0,tD=0,tS=0;
-  const rows=MESES.map((n,i)=>{
-    const recs=bd.receitas.filter(r=>r.mes===i&&r.ano===ano);
-    const desps=bd.despesas.filter(d=>d.mes===i&&d.ano===ano);
-    const tr=recs.reduce((s,r)=>s+r.valor,0)+totFixRec();
-    const df=desps.filter(d=>d.fixo).reduce((s,d)=>s+d.valor,0)+totFixDesp();
-    const dv=desps.filter(d=>!d.fixo).reduce((s,d)=>s+d.valor,0);
-    const td=df+dv,sal=tr-td,eco=tr>0?((sal/tr)*100).toFixed(1):'0.0';
-    tR+=tr;tDF+=df;tDV+=dv;tD+=td;tS+=sal;
-    const cur=i===mes;
-    return`<tr style="${cur?'background:rgba(233,69,96,.1)':''}">
-      <td style="font-weight:${cur?700:400};color:${cur?'#ff6b6b':'inherit'}">${cur?'▶ ':''}${n.slice(0,3)}</td>
-      <td class="vp">R$ ${fmt(tr)}</td>
-      <td style="color:#ffd200">R$ ${fmt(df)}</td>
-      <td style="color:#fbc2eb">R$ ${fmt(dv)}</td>
-      <td class="vn">R$ ${fmt(td)}</td>
-      <td style="color:${sal>=0?'#38ef7d':'#ff6b6b'};font-weight:700">R$ ${fmt(sal)}</td>
-      <td style="color:${parseFloat(eco)>=20?'#38ef7d':parseFloat(eco)>=10?'#ffd200':'#ff6b6b'}">${eco}%</td>
-    </tr>`;
-  }).join('');
-  document.getElementById('exc-resumo').innerHTML=rows;
-  const eT=tR>0?((tS/tR)*100).toFixed(1):'0.0';
-  document.getElementById('exc-foot').innerHTML=`<tr>
-    <td>TOTAL</td><td class="vp">R$ ${fmt(tR)}</td>
-    <td style="color:#ffd200">R$ ${fmt(tDF)}</td>
-    <td style="color:#fbc2eb">R$ ${fmt(tDV)}</td>
-    <td class="vn">R$ ${fmt(tD)}</td>
-    <td style="color:${tS>=0?'#38ef7d':'#ff6b6b'}">R$ ${fmt(tS)}</td>
-    <td>${eT}%</td>
-  </tr>`;
-}
+  itens.sort((a, b) => (b.ts || 0) - (a.ts || 0));
+  set('qtd-lanc', `${itens.length} registros`);
 
-// ══════════════════════════════════════════════
-//  POR MEMBRO
-// ══════════════════════════════════════════════
-function renderPorMembro(){
-  const desps=despMes();
-  document.getElementById('por-membro').innerHTML=
-    ['pai','mae','filho','familia'].map(k=>{
-      const t=desps.filter(d=>d.membro===k).reduce((s,d)=>s+d.valor,0)
-        +fixosDesp().filter(f=>f.membro===k).reduce((s,f)=>s+f.valor,0);
-      const n={pai:`👨 ${cfg.pai}`,mae:`👩 ${cfg.mae}`,
-               filho:`👦 ${cfg.filho}`,familia:'👨‍👩‍👦 Família'}[k];
-      return`<div style="display:flex;justify-content:space-between;padding:9px 0;
-        border-bottom:1px solid rgba(255,255,255,.05);font-size:.83rem">
-        <span>${n}</span><span class="vn">R$ ${fmt(t)}</span>
+  if (itens.length === 0) {
+    c.innerHTML = '<div style="color:rgba(255,255,255,.3);font-size:.8rem;text-align:center;padding:16px">Nenhum lançamento encontrado</div>';
+    return;
+  }
+
+  c.innerHTML = itens.map(it => {
+    const isR = it.tipoItem === 'rec';
+    const delFn = isR ? (it.excel ? `delRecebivel('${it.id}')` : `delRec('${it.id}')`) : `delDesp('${it.id}')`;
+    const pag = getPag(it.id);
+    const memb = obterMembro(it.membro);
+
+    return `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.83rem">
+        <div>
+          <div style="font-weight:600">
+            ${isR ? '💚' : '❤️'} ${it.desc}
+            ${it.fixo ? '<span style="font-size:.68rem;background:rgba(233,69,96,.2);color:#ff758c;padding:1px 5px;border-radius:6px;margin-left:4px">fixo</span>' : ''}
+            <span class="tag-membro" style="background:${memb.cor}22;color:${memb.cor};border:1px solid ${memb.cor}44">${memb.icone} ${memb.nome}</span>
+          </div>
+          <div style="font-size:.7rem;color:rgba(255,255,255,.4)">
+            ${it.data || ''} · ${CDESP[it.cat] || CREC[it.cat] || it.cat}
+            ${!isR ? ` · <span style="color:${pag.pago ? '#38ef7d' : '#ffd200'}">${pag.pago ? '✅ Pago' : '⏳ Pendente'}</span>` : ''}
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-weight:700;color:${isR ? '#38ef7d' : '#ff6b6b'}">
+            ${isR ? '+' : '-'} R$ ${fmt(it.valor)}
+          </span>
+          <button onclick="${delFn}" style="background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;font-size:.85rem">🗑️</button>
+        </div>
       </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════
+//  ITENS FIXOS
+// ══════════════════════════════════════════════
+function addFixo() {
+  const tipo = v('fx-tipo');
+  const desc = v('fx-desc').trim();
+  const val = parseFloat(v('fx-val'));
+  const cat = v('fx-cat');
+  const memb = v('fx-memb');
+  const dia = parseInt(v('fx-dia')) || 10;
+
+  if (!desc || isNaN(val) || val <= 0) {
+    notif('Preencha descrição e valor válido!', 'err');
+    return;
+  }
+
+  bd.fixos.push({
+    id: 'f' + Date.now(),
+    tipo,
+    desc,
+    valor: val,
+    cat,
+    membro: memb,
+    diaVenc: dia
+  });
+
+  salvarBD();
+  sv('fx-desc', '');
+  sv('fx-val', '');
+  renderFixos();
+  renderExcFixos();
+  renderPagar();
+  renderCards();
+  notif('🔒 Item fixo adicionado!', 'ok');
+}
+
+function delFixo(id) {
+  bd.fixos = bd.fixos.filter(f => f.id !== id);
+  Object.keys(bd.pagamentos).forEach(k => {
+    if (k.startsWith(id)) delete bd.pagamentos[k];
+  });
+  salvarBD();
+  renderFixos();
+  renderExcFixos();
+  renderPagar();
+  renderCards();
+  notif('🗑️ Item fixo removido!', 'ok');
+}
+
+function renderFixos() {
+  const cD = document.getElementById('lista-fix-d');
+  const cR = document.getElementById('lista-fix-r');
+  if (!cD || !cR) return;
+
+  const fds = fixosDesp();
+  const frs = fixosRec();
+
+  cD.innerHTML = fds.length === 0
+    ? '<div style="color:rgba(255,255,255,.3);font-size:.8rem;padding:8px 0">Nenhuma despesa fixa cadastrada</div>'
+    : fds.map(f => {
+      const memb = obterMembro(f.membro);
+      return `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.83rem">
+          <div>
+            <div style="font-weight:600">
+              ❤️ ${f.desc}
+              <span class="tag-membro" style="background:${memb.cor}22;color:${memb.cor};border:1px solid ${memb.cor}44">${memb.icone} ${memb.nome}</span>
+            </div>
+            <div style="font-size:.7rem;color:rgba(255,255,255,.4)">${CDESP[f.cat] || f.cat} · Vence dia ${f.diaVenc}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-weight:700;color:#ff6b6b">R$ ${fmt(f.valor)}</span>
+            <button onclick="delFixo('${f.id}')" style="background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer">🗑️</button>
+          </div>
+        </div>`;
     }).join('');
+
+  cR.innerHTML = frs.length === 0
+    ? '<div style="color:rgba(255,255,255,.3);font-size:.8rem;padding:8px 0">Nenhuma receita fixa cadastrada</div>'
+    : frs.map(f => {
+      const memb = obterMembro(f.membro);
+      return `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.83rem">
+          <div>
+            <div style="font-weight:600">
+              💚 ${f.desc}
+              <span class="tag-membro" style="background:${memb.cor}22;color:${memb.cor};border:1px solid ${memb.cor}44">${memb.icone} ${memb.nome}</span>
+            </div>
+            <div style="font-size:.7rem;color:rgba(255,255,255,.4)">${CREC[f.cat] || f.cat} · Recebimento dia ${f.diaVenc}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-weight:700;color:#38ef7d">R$ ${fmt(f.valor)}</span>
+            <button onclick="delFixo('${f.id}')" style="background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer">🗑️</button>
+          </div>
+        </div>`;
+    }).join('');
+}
+
+function renderExcFixos() {
+  const c = document.getElementById('exc-fixos');
+  if (!c) return;
+  const fds = fixosDesp();
+  const frs = fixosRec();
+  if (fds.length === 0 && frs.length === 0) {
+    c.innerHTML = '<div style="color:rgba(255,255,255,.3);font-size:.8rem;padding:8px 0">Nenhum item fixo cadastrado</div>';
+    return;
+  }
+  const totD = fds.reduce((s, f) => s + f.valor, 0);
+  const totR = frs.reduce((s, f) => s + f.valor, 0);
+
+  c.innerHTML = `
+    <table style="width:100%;border-collapse:collapse;font-size:.82rem">
+      <thead>
+        <tr style="color:rgba(255,255,255,.5);border-bottom:1px solid rgba(255,255,255,.1)">
+          <th style="text-align:left;padding:6px 0">Item Fixo</th>
+          <th style="text-align:center;padding:6px 0">Membro</th>
+          <th style="text-align:right;padding:6px 0">Mensal</th>
+          <th style="text-align:right;padding:6px 0">Ano (12x)</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${frs.map(f => `
+          <tr style="border-bottom:1px solid rgba(255,255,255,.05)">
+            <td style="padding:7px 0;color:#38ef7d">💚 ${f.desc}</td>
+            <td style="text-align:center;font-size:.75rem">${obterMembro(f.membro).icone}</td>
+            <td style="text-align:right;color:#38ef7d;font-weight:700">R$ ${fmt(f.valor)}</td>
+            <td style="text-align:right;color:#38ef7d">R$ ${fmt(f.valor * 12)}</td>
+          </tr>
+        `).join('')}
+        ${fds.map(f => `
+          <tr style="border-bottom:1px solid rgba(255,255,255,.05)">
+            <td style="padding:7px 0;color:#ff6b6b">❤️ ${f.desc}</td>
+            <td style="text-align:center;font-size:.75rem">${obterMembro(f.membro).icone}</td>
+            <td style="text-align:right;color:#ff6b6b;font-weight:700">R$ ${fmt(f.valor)}</td>
+            <td style="text-align:right;color:#ff6b6b">R$ ${fmt(f.valor * 12)}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+      <tfoot>
+        <tr style="border-top:1px solid rgba(255,255,255,.15);font-weight:700">
+          <td style="padding:8px 0">SALDO FIXO MENSAL</td>
+          <td></td>
+          <td style="text-align:right;color:${(totR - totD) >= 0 ? '#38ef7d' : '#ff6b6b'}">R$ ${fmt(totR - totD)}</td>
+          <td style="text-align:right;color:${(totR - totD) >= 0 ? '#38ef7d' : '#ff6b6b'}">R$ ${fmt((totR - totD) * 12)}</td>
+        </tr>
+      </tfoot>
+    </table>
+  `;
+}
+
+// ══════════════════════════════════════════════
+//  CONTROLE DE PAGAMENTOS
+// ══════════════════════════════════════════════
+function togglePag(itemId, isFixo, valor) {
+  const ch = chavePag(itemId);
+  const atual = bd.pagamentos[ch] || { pago: false };
+  const novoEstado = !atual.pago;
+
+  if (novoEstado) {
+    bd.pagamentos[ch] = {
+      pago: true,
+      dataPag: new Date().toISOString().split('T')[0],
+      valorPago: valor
+    };
+    notif('✅ Pagamento confirmado! R$ ' + fmt(valor) + ' abatido', 'ok');
+  } else {
+    bd.pagamentos[ch] = { pago: false, dataPag: '', valorPago: 0 };
+    notif('↩️ Pagamento desfeito!', 'info');
+  }
+
+  salvarBD();
+  renderTudo();
+}
+
+function renderPagar() {
+  const cFix = document.getElementById('pag-lista-fix');
+  const cVar = document.getElementById('pag-lista-var');
+  const cRec = document.getElementById('pag-lista-rec');
+  if (!cFix || !cVar || !cRec) return;
+
+  const t = calcTotais();
+  set('pag-label-mes', MESES[mes] + '/' + ano);
+  set('pag-tot-desp', 'R$ ' + fmt(t.totDesp));
+  set('pag-tot-pago', 'R$ ' + fmt(t.totPago));
+  set('pag-tot-falta', 'R$ ' + fmt(t.totFalta));
+  const progEl = document.getElementById('pag-barra');
+  if (progEl) progEl.style.width = t.pctPago + '%';
+  set('pag-prog-label', t.pctPago + '% pago');
+
+  const fds = fixosDesp();
+  cFix.innerHTML = fds.length === 0
+    ? '<div style="color:rgba(255,255,255,.3);font-size:.8rem;padding:8px 0">Nenhuma despesa fixa cadastrada</div>'
+    : fds.map(f => {
+      const pag = getPag(f.id);
+      const memb = obterMembro(f.membro);
+      return `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.83rem">
+          <div>
+            <div style="font-weight:600;display:flex;align-items:center;gap:6px">
+              <span>${pag.pago ? '✅' : '⏳'} ${f.desc}</span>
+              <span class="tag-membro" style="background:${memb.cor}22;color:${memb.cor};border:1px solid ${memb.cor}44">${memb.icone} ${memb.nome}</span>
+            </div>
+            <div style="font-size:.7rem;color:rgba(255,255,255,.4)">
+              Vence dia ${f.diaVenc} · ${CDESP[f.cat] || f.cat}
+              ${pag.pago ? ` · <span style="color:#38ef7d">Pago em ${pag.dataPag}</span>` : ''}
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-weight:700;color:${pag.pago ? '#38ef7d' : '#ff6b6b'}">R$ ${fmt(f.valor)}</span>
+            <button onclick="togglePag('${f.id}', true, ${f.valor})"
+              style="border:none;border-radius:20px;padding:6px 12px;font-size:.75rem;font-weight:700;cursor:pointer;
+                     background:${pag.pago ? 'rgba(56,239,125,.2)' : 'linear-gradient(90deg,#e94560,#ff6b6b)'};
+                     color:${pag.pago ? '#38ef7d' : 'white'};border:1px solid ${pag.pago ? '#38ef7d' : 'transparent'}">
+              ${pag.pago ? 'Pago ✅' : 'Pagar'}
+            </button>
+          </div>
+        </div>`;
+    }).join('');
+
+  const desps = despMes();
+  cVar.innerHTML = desps.length === 0
+    ? '<div style="color:rgba(255,255,255,.3);font-size:.8rem;padding:8px 0">Nenhuma despesa variável este mês</div>'
+    : desps.map(d => {
+      const pag = getPag(d.id);
+      const memb = obterMembro(d.membro);
+      return `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.83rem">
+          <div>
+            <div style="font-weight:600;display:flex;align-items:center;gap:6px">
+              <span>${pag.pago ? '✅' : '⏳'} ${d.desc}</span>
+              <span class="tag-membro" style="background:${memb.cor}22;color:${memb.cor};border:1px solid ${memb.cor}44">${memb.icone} ${memb.nome}</span>
+            </div>
+            <div style="font-size:.7rem;color:rgba(255,255,255,.4)">
+              ${d.data || ''} · ${CDESP[d.cat] || d.cat}
+              ${pag.pago ? ` · <span style="color:#38ef7d">Pago em ${pag.dataPag}</span>` : ''}
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-weight:700;color:${pag.pago ? '#38ef7d' : '#ff6b6b'}">R$ ${fmt(d.valor)}</span>
+            <button onclick="togglePag('${d.id}', false, ${d.valor})"
+              style="border:none;border-radius:20px;padding:6px 12px;font-size:.75rem;font-weight:700;cursor:pointer;
+                     background:${pag.pago ? 'rgba(56,239,125,.2)' : 'linear-gradient(90deg,#e94560,#ff6b6b)'};
+                     color:${pag.pago ? '#38ef7d' : 'white'};border:1px solid ${pag.pago ? '#38ef7d' : 'transparent'}">
+              ${pag.pago ? 'Pago ✅' : 'Pagar'}
+            </button>
+          </div>
+        </div>`;
+    }).join('');
+
+  const frs = fixosRec();
+  cRec.innerHTML = frs.length === 0
+    ? '<div style="color:rgba(255,255,255,.3);font-size:.8rem;padding:8px 0">Nenhuma receita fixa cadastrada</div>'
+    : frs.map(f => {
+      const pag = getPag(f.id);
+      const memb = obterMembro(f.membro);
+      return `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.83rem">
+          <div>
+            <div style="font-weight:600">
+              ${pag.pago ? '✅' : '⏳'} ${f.desc}
+              <span class="tag-membro" style="background:${memb.cor}22;color:${memb.cor};border:1px solid ${memb.cor}44">${memb.icone} ${memb.nome}</span>
+            </div>
+            <div style="font-size:.7rem;color:rgba(255,255,255,.4)">Recebe dia ${f.diaVenc} · ${CREC[f.cat] || f.cat}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-weight:700;color:#38ef7d">R$ ${fmt(f.valor)}</span>
+            <button onclick="togglePag('${f.id}', true, ${f.valor})"
+              style="border:none;border-radius:20px;padding:6px 12px;font-size:.75rem;font-weight:700;cursor:pointer;
+                     background:${pag.pago ? 'rgba(56,239,125,.2)' : 'rgba(255,255,255,.1)'};
+                     color:${pag.pago ? '#38ef7d' : 'white'}">
+              ${pag.pago ? 'Recebido ✅' : 'Receber'}
+            </button>
+          </div>
+        </div>`;
+    }).join('');
+}
+
+// ══════════════════════════════════════════════
+//  RELATÓRIOS & ANÁLISE POR MEMBRO
+// ══════════════════════════════════════════════
+function renderOrc() {
+  const c = document.getElementById('orcamento');
+  if (!c) return;
+  const desps = despMes();
+  const fds = fixosDesp();
+
+  c.innerHTML = Object.entries(CDESP).map(([k, n]) => {
+    const lim = cfg.orc[k] || 0;
+    const gV = desps.filter(d => d.cat === k).reduce((s, d) => s + d.valor, 0);
+    const gF = fds.filter(f => f.cat === k).reduce((s, f) => s + f.valor, 0);
+    const tot = gV + gF;
+    const pct = lim > 0 ? Math.min(100, ((tot / lim) * 100)).toFixed(0) : 0;
+    const ok = lim === 0 || tot <= lim;
+
+    return `
+      <div style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:4px">
+          <span>${n}</span>
+          <span style="font-weight:700;color:${ok ? '#38ef7d' : '#ff6b6b'}">
+            ${ok ? '✅' : '⚠️'} R$ ${fmt(tot)} ${lim > 0 ? `/ R$ ${fmt(lim)}` : ''}
+          </span>
+        </div>
+        <div class="pb"><div class="pf ${ok ? 'p-ok' : 'p-al'}" style="width:${pct}%"></div></div>
+      </div>`;
+  }).join('');
+}
+
+function renderExcResumo() {
+  const c = document.getElementById('exc-resumo');
+  if (!c) return;
+
+  let tR = 0, tDF = 0, tDV = 0, tD = 0, tS = 0;
+  const rows = MESES.map((n, i) => {
+    const t = calcTotais(i, ano);
+    tR += t.totRec;
+    tDF += t.totDespFix;
+    tDV += t.totDespVar;
+    tD += t.totDesp;
+    tS += t.saldo;
+    const cur = i === mes;
+
+    return `
+      <tr style="${cur ? 'background:rgba(233,69,96,.1)' : ''}">
+        <td style="font-weight:${cur ? 700 : 400};color:${cur ? '#ff6b6b' : 'inherit'}">${cur ? '▶ ' : ''}${n.slice(0, 3)}</td>
+        <td class="vp">R$ ${fmt(t.totRec)}</td>
+        <td style="color:#ffd200">R$ ${fmt(t.totDespFix)}</td>
+        <td style="color:#fbc2eb">R$ ${fmt(t.totDespVar)}</td>
+        <td class="vn">R$ ${fmt(t.totDesp)}</td>
+        <td style="color:${t.saldo >= 0 ? '#38ef7d' : '#ff6b6b'};font-weight:700">R$ ${fmt(t.saldo)}</td>
+        <td style="color:${parseFloat(t.pctEco) >= 20 ? '#38ef7d' : parseFloat(t.pctEco) >= 10 ? '#ffd200' : '#ff6b6b'}">${t.pctEco}%</td>
+      </tr>`;
+  }).join('');
+
+  c.innerHTML = rows;
+  const eT = tR > 0 ? ((tS / tR) * 100).toFixed(1) : '0.0';
+  const foot = document.getElementById('exc-foot');
+  if (foot) {
+    foot.innerHTML = `
+      <tr>
+        <td>TOTAL</td>
+        <td class="vp">R$ ${fmt(tR)}</td>
+        <td style="color:#ffd200">R$ ${fmt(tDF)}</td>
+        <td style="color:#fbc2eb">R$ ${fmt(tDV)}</td>
+        <td class="vn">R$ ${fmt(tD)}</td>
+        <td style="color:${tS >= 0 ? '#38ef7d' : '#ff6b6b'}">R$ ${fmt(tS)}</td>
+        <td>${eT}%</td>
+      </tr>`;
+  }
+}
+
+function renderPorMembro() {
+  const c = document.getElementById('por-membro');
+  if (!c) return;
+
+  const desps = despMes();
+  const fds = fixosDesp();
+  const recs = recMes();
+  const frs = fixosRec();
+
+  c.innerHTML = cfg.membros.map(m => {
+    const totD = desps.filter(d => d.membro === m.id).reduce((s, d) => s + d.valor, 0)
+               + fds.filter(f => f.membro === m.id).reduce((s, f) => s + f.valor, 0);
+
+    const totR = recs.filter(r => r.membro === m.id).reduce((s, r) => s + r.valor, 0)
+               + frs.filter(f => f.membro === m.id).reduce((s, f) => s + f.valor, 0);
+
+    const salMembro = totR - totD;
+
+    return `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.83rem">
+        <div>
+          <span style="font-weight:700;color:${m.cor}">${m.icone} ${m.nome}</span>
+          ${m.rendaMensal > 0 ? `<div style="font-size:.7rem;color:rgba(255,255,255,.4)">Renda base: R$ ${fmt(m.rendaMensal)}</div>` : ''}
+        </div>
+        <div style="text-align:right">
+          <div class="vn" style="font-weight:700">Despesas: R$ ${fmt(totD)}</div>
+          <div style="font-size:.7rem;color:${salMembro >= 0 ? '#38ef7d' : '#ff6b6b'}">Saldo: R$ ${fmt(salMembro)}</div>
+        </div>
+      </div>`;
+  }).join('');
 }
 
 // ══════════════════════════════════════════════
 //  METAS
 // ══════════════════════════════════════════════
-function renderMetas(){
-  const c=document.getElementById('lista-metas');
-  if(!bd.metas.length){c.innerHTML='<div class="vazio">🎯 Nenhuma meta</div>';return;}
-  c.innerHTML=bd.metas.map(m=>{
-    const p=Math.min(100,(m.atual/m.total)*100).toFixed(1);
-    const cl=p>=100?'p-ok':p>=60?'p-warn':'p-over';
-    const ic=p>=100?'🏆':p>=60?'🔥':'💪';
-    return`<div class="meta-box">
-      <div style="display:flex;justify-content:space-between;margin-bottom:7px">
-        <span style="font-weight:700">${ic} ${m.nome}</span>
-        <button class="del" onclick="delMeta('${m.id}')">✕</button>
-      </div>
-      ${m.prazo?`<div style="font-size:.7rem;color:rgba(255,255,255,.4);margin-bottom:7px">📅 ${m.prazo}</div>`:''}
-      <div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:5px">
-        <span>Guardado: <strong style="color:#fbc2eb">R$ ${fmt(m.atual)}</strong></span>
-        <span style="color:rgba(255,255,255,.4)">Meta: R$ ${fmt(m.total)}</span>
-      </div>
-      <div class="pb"><div class="pf ${cl}" style="width:${p}%"></div></div>
-      <div style="display:flex;justify-content:space-between;font-size:.72rem;margin-top:5px">
-        <span style="color:rgba(255,255,255,.4)">Falta: R$ ${fmt(Math.max(0,m.total-m.atual))}</span>
-        <span style="font-weight:700;color:${p>=100?'#38ef7d':p>=60?'#ffd200':'#ff6b6b'}">${p}%</span>
-      </div>
-      <div style="display:flex;gap:7px;margin-top:9px">
-        <input type="number" id="mu_${m.id}" placeholder="Atualizar valor"
-          style="flex:1;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
-                 color:white;padding:7px 10px;border-radius:8px;font-size:.8rem;outline:none">
-        <button onclick="updMeta('${m.id}',document.getElementById('mu_${m.id}').value)"
-          style="background:linear-gradient(90deg,#a18cd1,#fbc2eb);border:none;
-                 color:#1a1a2e;padding:7px 12px;border-radius:8px;cursor:pointer;font-weight:700">💾</button>
-      </div>
-    </div>`;
+function addMeta() {
+  const nome = v('m-nome').trim();
+  const total = parseFloat(v('m-total'));
+  const atual = parseFloat(v('m-atual')) || 0;
+  const prazo = v('m-prazo');
+
+  if (!nome || isNaN(total) || total <= 0) {
+    notif('Preencha nome e valor total da meta!', 'err');
+    return;
+  }
+
+  bd.metas.push({
+    id: 'm' + Date.now(),
+    nome,
+    total,
+    atual,
+    prazo
+  });
+
+  salvarBD();
+  sv('m-nome', '');
+  sv('m-total', '');
+  sv('m-atual', '');
+  renderMetas();
+  notif('🎯 Meta criada!', 'ok');
+}
+
+function updMeta(id, val) {
+  const vNum = parseFloat(val);
+  if (isNaN(vNum) || vNum < 0) return;
+  const m = bd.metas.find(x => x.id === id);
+  if (m) {
+    m.atual = vNum;
+    salvarBD();
+    renderMetas();
+    notif('💾 Meta atualizada!', 'ok');
+  }
+}
+
+function delMeta(id) {
+  bd.metas = bd.metas.filter(m => m.id !== id);
+  salvarBD();
+  renderMetas();
+  notif('🗑️ Meta excluída!', 'ok');
+}
+
+function renderMetas() {
+  const c = document.getElementById('lista-metas');
+  if (!c) return;
+
+  if (bd.metas.length === 0) {
+    c.innerHTML = '<div style="color:rgba(255,255,255,.3);font-size:.8rem;padding:8px 0">🎯 Nenhuma meta cadastrada</div>';
+    return;
+  }
+
+  c.innerHTML = bd.metas.map(m => {
+    const pct = Math.min(100, ((m.atual / m.total) * 100)).toFixed(0);
+    return `
+      <div class="box">
+        <div class="bt">
+          <span>🎯 ${m.nome}</span>
+          <button onclick="delMeta('${m.id}')" style="background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer">🗑️</button>
+        </div>
+        <div style="font-size:.8rem;color:rgba(255,255,255,.6);margin-bottom:6px">
+          R$ ${fmt(m.atual)} de R$ ${fmt(m.total)} (${pct}%)
+          ${m.prazo ? ` · Prazo: ${m.prazo}` : ''}
+        </div>
+        <div class="pb"><div class="pf p-ok" style="width:${pct}%"></div></div>
+        <div style="display:flex;gap:7px;margin-top:9px">
+          <input type="number" id="mu_${m.id}" placeholder="Atualizar valor guardado"
+            style="flex:1;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+                   color:white;padding:7px 10px;border-radius:8px;font-size:.8rem;outline:none">
+          <button onclick="updMeta('${m.id}',document.getElementById('mu_${m.id}').value)"
+            style="background:linear-gradient(90deg,#a18cd1,#fbc2eb);border:none;
+                   color:#1a1a2e;padding:7px 12px;border-radius:8px;cursor:pointer;font-weight:700">💾</button>
+        </div>
+      </div>`;
   }).join('');
 }
 
 // ══════════════════════════════════════════════
-//  CONFIG ORÇAMENTO
+//  CONFIGURAÇÃO DE ORÇAMENTO
 // ══════════════════════════════════════════════
-function renderCfgOrc(){
-  document.getElementById('cfg-orc').innerHTML=Object.entries(CDESP).map(([k,n])=>`
+function renderCfgOrc() {
+  const c = document.getElementById('cfg-orc');
+  if (!c) return;
+
+  c.innerHTML = Object.entries(CDESP).map(([k, n]) => `
     <div class="cfg-i">
       <div><div class="cfg-l">${n}</div></div>
-      <input class="cfg-inp" type="number" value="${cfg.orc[k]||0}"
-        onchange="cfg.orc['${k}']=parseFloat(this.value)||0;
-                  localStorage.setItem('ff_cfg',JSON.stringify(cfg));renderOrc()">
+      <input class="cfg-inp" type="number" value="${cfg.orc[k] || 0}"
+        onchange="cfg.orc['${k}'] = parseFloat(this.value) || 0; localStorage.setItem('ff_cfg', JSON.stringify(cfg)); renderOrc();">
     </div>`).join('');
 }
 
 // ══════════════════════════════════════════════
-//  NAVEGAÇÃO
+//  EXCEL: DÍVIDAS E RECEBÍVEIS DO TERRENO
 // ══════════════════════════════════════════════
-function ir(id,el,bi){
-  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
-  document.getElementById('s-'+id).classList.add('on');
-  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
-  if(el) el.classList.add('on');
-  document.querySelectorAll('.bb').forEach((b,i)=>b.classList.toggle('on',i===bi));
-  window.scrollTo(0,0);
-  if(id==='fixos'){renderFixos();renderExcFixos();}
-  if(id==='pagar') renderPagar();
-  if(id==='relatorio'){renderOrc();renderExcResumo();renderPorMembro();}
-  if(id==='metas') renderMetas();
+function importarDadosExcelUmaVez() {
+  if (localStorage.getItem('ff_excel_seed_v1') === '1') return;
+  fetch('./excel_seed.json')
+    .then(r => r.ok ? r.json() : Promise.reject(new Error('seed não encontrado')))
+    .then(seed => {
+      bd.recebiveis = (seed.recebiveis || []).map(r => ({ ...r, excel: true, tipo: 'receita' }));
+      bd.dividas = seed.dividas || [];
+      localStorage.setItem('ff_excel_seed_v1', '1');
+      salvarBD(); renderTudo();
+      notif(`📥 ${bd.recebiveis.length} recebíveis e ${bd.dividas.length} dívidas importados do Excel`, 'info');
+    })
+    .catch(() => console.warn('Importação automática do Excel indisponível neste modo de abertura.'));
 }
 
-function mudarMes(){
-  mes=parseInt(v('selMes'));
-  ano=parseInt(v('selAno'));
+function delRecebivel(id) {
+  bd.recebiveis = (bd.recebiveis || []).filter(r => r.id !== id);
+  salvarBD(); renderTudo(); notif('🗑️ Recebível removido!', 'ok');
+}
+
+function renderRecebiveisResumo() {
+  const c = document.getElementById('recebiveis-resumo'); if (!c) return;
+  const rs = bd.recebiveis || [];
+  const total = rs.reduce((s, r) => s + Number(r.valor || 0), 0);
+  const pagos = rs.filter(r => r.pago).reduce((s, r) => s + Number(r.valor || 0), 0);
+  const dividas = bd.dividas || [];
+  const dividaTotal = dividas.reduce((s, d) => s + Number(d.valorAtual || 0), 0);
+  c.innerHTML = `<div class="pag-resumo">
+    <div class="pag-card"><div class="pl">Total previsto</div><div class="pv vp">R$ ${fmt(total)}</div></div>
+    <div class="pag-card"><div class="pl">Recebido</div><div class="pv vp">R$ ${fmt(pagos)}</div></div>
+    <div class="pag-card"><div class="pl">Em aberto</div><div class="pv" style="color:#ffd200">R$ ${fmt(total - pagos)}</div></div>
+  </div><div style="font-size:.78rem;color:rgba(255,255,255,.65);margin-bottom:9px">💳 Dívidas importadas: ${dividas.length} · Valor com desconto informado: R$ ${fmt(dividaTotal)}</div>
+  <div class="exc"><table><thead><tr><th>Recebível</th><th>Vencimento</th><th>Valor</th><th>Status</th></tr></thead><tbody>
+  ${rs.slice(-12).map(r => `<tr><td>${r.desc}</td><td>${r.data}</td><td>R$ ${fmt(r.valor)}</td><td>${r.pago ? '✅ Recebido' : '⏳ Em aberto'}</td></tr>`).join('')}</tbody></table></div>`;
+}
+
+// ══════════════════════════════════════════════
+//  TEMA E SENHA LOCAL
+// ══════════════════════════════════════════════
+function aplicarTema() {
+  const tema = cfg.tema === 'light' ? 'light' : 'dark';
+  document.body.classList.toggle('theme-light', tema === 'light');
+  const claro = document.getElementById('tema-claro'); const escuro = document.getElementById('tema-escuro');
+  if (claro) claro.classList.toggle('active', tema === 'light');
+  if (escuro) escuro.classList.toggle('active', tema === 'dark');
+}
+function definirTema(tema) { cfg.tema = tema === 'light' ? 'light' : 'dark'; salvarCfg(); notif(cfg.tema === 'light' ? '☀️ Tema claro ativado' : '🌙 Tema escuro ativado', 'info'); }
+async function hashSenha(valor) {
+  const data = new TextEncoder().encode(valor); const digest = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+async function salvarSenhaAcesso() {
+  const atual = v('senha-atual'), nova = v('senha-nova'), confirmacao = v('senha-confirmacao');
+  if (cfg.senhaHash && await hashSenha(atual) !== cfg.senhaHash) return notif('Senha atual incorreta.', 'err');
+  if (nova.length < 4) return notif('A nova senha precisa ter pelo menos 4 caracteres.', 'err');
+  if (nova !== confirmacao) return notif('A confirmação não confere.', 'err');
+  cfg.senhaHash = await hashSenha(nova); salvarCfg(); sv('senha-atual',''); sv('senha-nova',''); sv('senha-confirmacao',''); atualizarStatusSenha(); notif('🔒 Senha salva neste dispositivo.', 'ok');
+}
+async function removerSenhaAcesso() {
+  if (!cfg.senhaHash) return notif('Não há senha configurada.', 'info');
+  if (await hashSenha(v('senha-atual')) !== cfg.senhaHash) return notif('Informe a senha atual para removê-la.', 'err');
+  cfg.senhaHash = ''; salvarCfg(); atualizarStatusSenha(); notif('🔓 Senha removida.', 'ok');
+}
+function atualizarStatusSenha() { const el = document.getElementById('status-senha'); if (el) el.textContent = cfg.senhaHash ? '✅ Senha configurada neste navegador.' : 'ℹ️ Nenhuma senha configurada.'; }
+function verificarBloqueio() {
+  const lock = document.getElementById('lock-screen'); if (!lock || !cfg.senhaHash || sessionStorage.getItem('ff_desbloqueado') === '1') return;
+  lock.style.display = 'flex'; document.body.style.overflow = 'hidden';
+}
+async function desbloquearApp() {
+  const erro = document.getElementById('erro-acesso');
+  if (await hashSenha(v('senha-acesso')) !== cfg.senhaHash) { if (erro) erro.textContent = 'Senha incorreta.'; return; }
+  sessionStorage.setItem('ff_desbloqueado', '1'); document.getElementById('lock-screen').style.display = 'none'; document.body.style.overflow = '';
+}
+
+// ══════════════════════════════════════════════
+//  RELATÓRIO PDF
+// ══════════════════════════════════════════════
+function baixarRelatorioPDF() {
+  const PDF = window.jspdf && window.jspdf.jsPDF;
+  if (!PDF) return notif('Biblioteca PDF não carregada. Atualize a página.', 'err');
+  const doc = new PDF({ unit: 'mm', format: 'a4' }); let y = 16; const margem = 14;
+  const reais = n => 'R$ ' + Number(n || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+  const linha = (texto, tamanho = 9, cor = [31,41,55]) => { doc.setFontSize(tamanho); doc.setTextColor(...cor); const ls = doc.splitTextToSize(String(texto), 182); if (y + ls.length * 5 > 282) { doc.addPage(); y = 16; } doc.text(ls, margem, y); y += ls.length * 5; };
+  const titulo = texto => { y += 3; linha(texto, 13, [37,99,235]); y += 2; };
+  const rs = bd.recebiveis || [], despesas = bd.despesas || [];
+  const totalRec = rs.reduce((s,r) => s + Number(r.valor||0), 0), recebido = rs.filter(r=>r.pago).reduce((s,r)=>s+Number(r.valor||0),0), totalDesp = despesas.reduce((s,d)=>s+Number(d.valor||0),0);
+  doc.setFillColor(37,99,235); doc.rect(0,0,210,10,'F');
+  linha('Finanças Família — Relatório completo', 16, [37,99,235]); linha(`Gerado em ${new Date().toLocaleString('pt-BR')}`, 8, [100,116,139]);
+  titulo('Resumo financeiro'); linha(`Recebíveis previstos: ${reais(totalRec)} | Recebido: ${reais(recebido)} | Em aberto: ${reais(totalRec-recebido)}`); linha(`Despesas manuais registradas: ${reais(totalDesp)}`);
+  titulo('Recebíveis do terreno'); rs.forEach(r => linha(`${r.data} — ${r.desc} — ${reais(r.valor)} — ${r.pago ? 'Recebido' : 'Em aberto'}`, 8));
+  titulo('Despesas registradas'); if (!despesas.length) linha('Nenhuma despesa manual registrada.', 9, [100,116,139]); despesas.forEach(d => linha(`${d.data||'—'} — ${d.desc} — ${reais(d.valor)} — ${CDESP[d.cat]||d.cat||'Sem categoria'} — ${nomeMem(d.membro)}`, 8));
+  titulo('Dívidas importadas da planilha'); (bd.dividas||[]).forEach(d => linha(`${d.nome} — Valor com desconto: ${reais(d.valorAtual)} — À vista informado: ${reais(d.valorAtual)}`, 8));
+  linha('Observação: os valores foram importados da planilha Controle_Dividas_Apresentacao.xlsx e devem ser conferidos antes de decisões financeiras.', 8, [100,116,139]);
+  doc.save(`relatorio-financas-familia-${new Date().toISOString().slice(0,10)}.pdf`); notif('📄 Relatório PDF baixado.', 'ok');
+}
+
+// ══════════════════════════════════════════════
+//  NAVEGAÇÃO ENTRE TELAS
+// ══════════════════════════════════════════════
+function ir(id, el, bi) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
+  const target = document.getElementById('s-' + id);
+  if (target) target.classList.add('on');
+
+  document.querySelectorAll('.nb').forEach(b => b.classList.remove('on'));
+  if (el) el.classList.add('on');
+
+  document.querySelectorAll('.bb').forEach((b, i) => b.classList.toggle('on', i === bi));
+  window.scrollTo(0, 0);
+
+  if (id === 'fixos') { renderFixos(); renderExcFixos(); }
+  if (id === 'pagar') renderPagar();
+  if (id === 'relatorio') { renderOrc(); renderExcResumo(); renderPorMembro(); }
+  if (id === 'metas') renderMetas();
+}
+
+function mudarMes(val) {
+  const mesVal = val === undefined ? document.getElementById('selMes')?.value : val;
+  const anoVal = document.getElementById('selAno')?.value;
+  mes = Number.isFinite(parseInt(mesVal, 10)) ? parseInt(mesVal, 10) : mes;
+  if (Number.isFinite(parseInt(anoVal, 10))) ano = parseInt(anoVal, 10);
   renderTudo();
 }
 
-function setTog(t){
-  togAtivo=t;
-  document.getElementById('form-r').style.display=t==='r'?'block':'none';
-  document.getElementById('form-d').style.display=t==='d'?'block':'none';
-  document.getElementById('tog-r').className='tb'+(t==='r'?' tr':'');
-  document.getElementById('tog-d').className='tb'+(t==='d'?' td':'');
+function mudarAno(val) {
+  const anoVal = val === undefined ? document.getElementById('selAno')?.value : val;
+  ano = Number.isFinite(parseInt(anoVal, 10)) ? parseInt(anoVal, 10) : ano;
+  renderTudo();
 }
 
-function setFil(f,btn){
-  filtro=f;
-  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('on'));
+function setTog(t) {
+  togAtivo = t;
+  document.getElementById('form-r').style.display = t === 'r' ? 'block' : 'none';
+  document.getElementById('form-d').style.display = t === 'd' ? 'block' : 'none';
+  document.getElementById('tog-r').className = 'tb' + (t === 'r' ? ' tr' : '');
+  document.getElementById('tog-d').className = 'tb' + (t === 'd' ? ' td' : '');
+}
+
+function setFil(f, btn) {
+  filtro = f;
+  document.querySelectorAll('.fb').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
   renderLanc();
 }
 
 // ══════════════════════════════════════════════
-//  BACKUP
+//  BACKUP E RESTAURAÇÃO
 // ══════════════════════════════════════════════
-function exportar(){
-  const blob=new Blob([JSON.stringify({bd,cfg},null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;a.download=`financas_${MESES[mes]}_${ano}.json`;a.click();
-  URL.revokeObjectURL(url);notif('📤 Backup exportado!','ok');
+function exportar() {
+  const dados = { bd, cfg, versao: '3.0' };
+  const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `financas_familia_${MESES[mes]}_${ano}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  notif('📤 Backup exportado com sucesso!', 'ok');
 }
 
-function importar(e){
-  const f=e.target.files[0];if(!f)return;
-  const r=new FileReader();
-  r.onload=ev=>{
-    try{
-      const d=JSON.parse(ev.target.result);
-      if(d.bd){
-        bd=d.bd;
-        if(!bd.pagamentos) bd.pagamentos={};
-        if(d.cfg) cfg={...cfg,...d.cfg};
-        salvarBD();carregarCfgUI();renderCfgOrc();renderTudo();
-        notif('📥 Importado com sucesso!','ok');
+function importar(e) {
+  const f = e.target.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    try {
+      const d = JSON.parse(ev.target.result);
+      if (d.bd) {
+        bd = d.bd;
+        if (!bd.pagamentos) bd.pagamentos = {};
+        if (!bd.recebiveis) bd.recebiveis = [];
+        if (!bd.dividas) bd.dividas = [];
+        if (d.cfg) {
+          if (!d.cfg.membros && (d.cfg.pai || d.cfg.mae)) {
+            cfg.membros = [
+              { id: 'pai', nome: d.cfg.pai || 'Pai', icone: '👨', rendaMensal: d.cfg.sp || 5000, cor: '#3a7bd5' },
+              { id: 'mae', nome: d.cfg.mae || 'Mãe', icone: '👩', rendaMensal: d.cfg.sm || 4000, cor: '#e94560' },
+              { id: 'filho', nome: d.cfg.filho || 'Filho', icone: '👦', rendaMensal: d.cfg.mf || 200, cor: '#f7971e' },
+              { id: 'familia', nome: 'Família (Conjunto)', icone: '👨‍👩‍👦', rendaMensal: 0, cor: '#38ef7d' }
+            ];
+            if (d.cfg.orc) cfg.orc = { ...cfg.orc, ...d.cfg.orc };
+          } else {
+            cfg = { ...cfg, ...d.cfg };
+          }
+        }
+        salvarBD();
+        salvarCfg();
+        renderTudo();
+        notif('📥 Dados importados com sucesso!', 'ok');
       }
-    }catch{notif('Arquivo inválido!','err');}
+    } catch (err) {
+      notif('Arquivo de backup inválido!', 'err');
+    }
   };
   r.readAsText(f);
 }
 
-function limparTudo(){
-  if(confirm('⚠️ Apagar TODOS os dados?\nEssa ação não pode ser desfeita!')){
-    bd={receitas:[],despesas:[],fixos:[],metas:[],pagamentos:{}};
-    salvarBD();renderTudo();notif('🗑️ Dados apagados!','ok');
+function limparTudo() {
+  if (confirm('⚠️ ATENÇÃO: Deseja apagar TODOS os lançamentos e configurações?\nEssa ação não pode ser desfeita!')) {
+    bd = { receitas: [], despesas: [], fixos: [], metas: [], pagamentos: {}, recebiveis: [], dividas: [] };
+    localStorage.removeItem('ff_excel_seed_v1');
+    salvarBD();
+    renderTudo();
+    notif('🗑️ Dados limpos com sucesso!', 'ok');
   }
 }
 
 // ══════════════════════════════════════════════
-//  NOTIFICAÇÃO
+//  NOTIFICAÇÕES FLUTUANTES TOAST
 // ══════════════════════════════════════════════
-function notif(msg,tipo='ok'){
-  const el=document.createElement('div');
-  el.className='notif '+(tipo==='ok'?'nok':tipo==='info'?'ninfo':'nerr');
-  el.textContent=msg;
+function notif(msg, tipo = 'ok') {
+  const el = document.createElement('div');
+  el.className = 'notif ' + (tipo === 'ok' ? 'nok' : tipo === 'info' ? 'ninfo' : 'nerr');
+  el.textContent = msg;
   document.body.appendChild(el);
-  setTimeout(()=>el.remove(),3500);
+  setTimeout(() => el.remove(), 3500);
 }
+
 </script>
-# 📋 Passo a Passo — Atualizar o App com os 2 Módulos
-
----
-
-## 📁 O que você vai ter no final:
-
-```
-📁 financas-familia/
-   ├── 📄 index.html      ← App principal (receitas/despesas)
-   ├── 📄 dividas.html    ← Módulo de dívidas (NOVO)
-   ├── 📄 manifest.json
-   └── 📄 sw.js
-```
-
----
-
-## 🔧 PARTE 1 — Atualizar o index.html
-
----
-
-### Passo 1 — Abrir o arquivo atual
-
-```
-1. Vá até a pasta:  financas-familia
-   (na sua Área de Trabalho)
-
-2. Clique com botão direito no arquivo:
-   📄 index.html
-
-3. Clique em:
-   "Abrir com" → "Bloco de Notas"
-```
-
----
-
-### Passo 2 — Apagar o conteúdo atual
-
-```
-1. Dentro do Bloco de Notas
-   pressione:  Ctrl + A
-   (seleciona tudo)
-
-2. Pressione:  Delete
-   (apaga tudo)
-
-3. A tela fica em branco ✅
-```
-
----
-
-### Passo 3 — Colar o novo código
-
-```
-1. Copie TODO o código da versão corrigida
-   (o código grande com fixos + confirmação de pagamento
-    que foi gerado na resposta anterior)
-
-2. Cole no Bloco de Notas:  Ctrl + V
-
-3. Salve:  Ctrl + S
-
-4. ✅ index.html atualizado!
-```
-
----
-
-## 🆕 PARTE 2 — Criar o dividas.html
-
----
-
-### Passo 4 — Criar novo arquivo
-
-```
-1. Abra um NOVO Bloco de Notas
-   (sem fechar o outro)
-
-2. Copie TODO o código do módulo de dívidas
-   (o código com Gestão de Dívidas & Negociação Serasa)
-
-3. Cole no novo Bloco de Notas:  Ctrl + V
-```
-
----
-
-### Passo 5 — Salvar como dividas.html
-
-```
-1. Clique em:  Arquivo → Salvar Como
-
-2. Navegue até a pasta:  financas-familia
-
-3. Preencha:
-   Nome do arquivo:  dividas.html
-   Tipo:             Todos os arquivos (*.*)
-   Codificação:      UTF-8
-
-4. Clique em:  Salvar  ✅
-```
-
----
-
-## 🔗 PARTE 3 — Conectar os dois arquivos
-
-### Passo 6 — Adicionar botão no index.html
-
-```
-1. Abra o index.html no Bloco de Notas
-
-2. Use Ctrl + F para buscar:
-   </body>
-
-3. ANTES do </body> cole este código:
-```
-
-```html
-<!-- BOTÃO FLUTUANTE → DÍVIDAS -->
-<a href="dividas.html" style="
-    position: fixed;
-    bottom: 85px;
-    right: 16px;
-    background: linear-gradient(135deg,#e94560,#ff6b6b);
-    color: white;
-    border-radius: 50px;
-    padding: 12px 18px;
-    font-size: .82rem;
-    font-weight: 800;
-    text-decoration: none;
-    box-shadow: 0 5px 20px rgba(233,69,96,.5);
-    z-index: 999;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    animation: pulseBtn 2s infinite;
-">
-    💳 Dívidas Serasa
-</a>
-
-<style>
-@keyframes pulseBtn {
-    0%,100%{box-shadow:0 5px 20px rgba(233,69,96,.5)}
-    50%{box-shadow:0 5px 30px rgba(233,69,96,.9)}
-}
-</style>
-```
-
-```
-4. Salve:  Ctrl + S  ✅
-```
-
----
-
-### Passo 7 — Adicionar botão de voltar no dividas.html
-
-```
-1. Abra o dividas.html no Bloco de Notas
-
-2. Use Ctrl + F para buscar:
-   </body>
-
-3. ANTES do </body> cole este código:
-```
-
-```html
-<!-- BOTÃO VOLTAR → FINANCAS -->
-<a href="index.html" style="
-    position: fixed;
-    bottom: 20px;
-    right: 16px;
-    background: linear-gradient(135deg,#11998e,#38ef7d);
-    color: #1a1a2e;
-    border-radius: 50px;
-    padding: 12px 18px;
-    font-size: .82rem;
-    font-weight: 800;
-    text-decoration: none;
-    box-shadow: 0 5px 20px rgba(56,239,125,.4);
-    z-index: 999;
-">
-    🏠 Voltar ao App
-</a>
-```
-
-```
-4. Salve:  Ctrl + S  ✅
-```
-
----
-
-## 🌐 PARTE 4 — Subir para o GitHub Pages
-
----
-
-### Passo 8 — Acessar o GitHub
-
-```
-1. Acesse:  https://github.com
-
-2. Faça login na sua conta
-
-3. Clique no repositório:
-   financas-familia
-```
-
----
-
-### Passo 9 — Atualizar o index.html no GitHub
-
-```
-1. Clique no arquivo:  index.html
-
-2. Clique no ícone de lápis ✏️
-   (canto superior direito do arquivo)
-
-3. Selecione TUDO:  Ctrl + A
-
-4. Delete tudo
-
-5. Cole o novo código:  Ctrl + V
-
-6. Role até o final da página
-
-7. Em "Commit changes":
-   Mensagem:  "Atualização: fixos + pagamentos"
-
-8. Clique em:  "Commit changes"  ✅
-```
-
----
-
-### Passo 10 — Criar dividas.html no GitHub
-
-```
-1. No repositório, clique em:
-   "Add file" → "Create new file"
-
-2. No campo "Name your file":
-   Digite:  dividas.html
-
-3. Na área de texto grande:
-   Cole TODO o código do dividas.html
-
-4. Role até o final
-
-5. Em "Commit changes":
-   Mensagem:  "Novo: módulo de dívidas Serasa"
-
-6. Clique em:  "Commit changes"  ✅
-```
-
----
-
-### Passo 11 — Atualizar sw.js
-
-```
-1. No repositório, clique em:  sw.js
-
-2. Clique no lápis ✏️
-
-3. Substitua o conteúdo por:
-```
-
-```javascript
-const CACHE_NAME = 'financas-v2';
-const FILES = [
-  './',
-  './index.html',
-  './dividas.html',
-  './manifest.json'
-];
-
-self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open(CACHE_NAME).then(c => c.addAll(FILES))
-  );
-  self.skipWaiting();
-});
-
-self.addEventListener('activate', e => {
-  e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
-    )
-  );
-});
-
-self.addEventListener('fetch', e => {
-  e.respondWith(
-    caches.match(e.request).then(r => r || fetch(e.request))
-  );
-});
-```
-
-```
-4. Commit:  "Atualizar service worker v2"  ✅
-```
-
----
-
-## 📱 PARTE 5 — Atualizar no Celular
-
----
-
-### Passo 12 — Limpar cache e atualizar
-
-#### Android:
-```
-1. Abra o Chrome
-2. Acesse o link do seu app:
-   https://SEU-USUARIO.github.io/financas-familia
-
-3. Aperte:  ⋮ (3 pontinhos)
-4. Clique em:  "Atualizar"
-   ou segure o ícone 🔄 para forçar atualização
-
-5. Se tiver instalado como app:
-   → Desinstale o app da tela inicial
-   → Acesse o link novamente
-   → Reinstale: ⋮ → "Adicionar à tela inicial"
-```
-
-#### iPhone:
-```
-1. Abra o Safari
-2. Acesse o link do app
-3. Toque em:  □↑ Compartilhar
-4. "Adicionar à Tela de Início"
-5. Substitui o ícone anterior ✅
-```
-
----
-
-## ✅ Verificação Final
-
-```
-Após atualizar, confirme que:
-
-✅ index.html abre normalmente
-✅ Botão "💳 Dívidas Serasa" aparece no canto
-✅ Ao clicar vai para dividas.html
-✅ Em dividas.html aparece botão "🏠 Voltar"
-✅ Fixos aparecem em todos os meses
-✅ Confirmação de pagamento funciona
-✅ Dívidas salvam corretamente
-```
-
----
-
-## 🆘 Problemas Comuns
-
-| Problema | Solução |
-|---|---|
-| Arquivo salvo como `.html.txt` | Selecione "Todos os arquivos" ao salvar |
-| Botão de dívidas não aparece | Verifique se colou antes do `</body>` |
-| GitHub não atualiza | Aguarde 2-3 minutos após o commit |
-| App no celular não atualiza | Desinstale e reinstale na tela inicial |
-| Dados sumiram | Estão salvos no localStorage — não apague dados do site |
-
----
-
-> 💬 **Me diga em qual passo travou que te ajudo!** 😊</body>
+</body>
 </html>
