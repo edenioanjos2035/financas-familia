@@ -1,4 +1,4 @@
-const CACHE_NAME = 'financas-familia-v5-logo-20260917';
+const CACHE_NAME = 'financas-familia-v6-mobile-planilha-20261012';
 const APP_SHELL = [
   './', './index.html', './dividas.html', './manifest.json', './excel_seed.json',
   './vendor/jspdf.umd.min.js', './icons/icon-192.png', './icons/icon-512.png',

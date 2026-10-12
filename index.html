@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#e94560">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -17,6 +17,10 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);min-height:100vh;color:#e0e0e0;padding-bottom:75px}
+/* RESPONSIVO ANDROID: ocupa a largura real do aparelho e evita zoom/layout estreito */
+html{width:100%;min-width:0;overflow-x:hidden} body{width:100%;overflow-x:hidden;padding-bottom:calc(78px + env(safe-area-inset-bottom));touch-action:manipulation} img{max-width:100%;height:auto}.header,.nav,.perfil-bar,.bot{width:100%;max-width:none}.sec{width:100%;max-width:800px;padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}.fg{min-width:0}.fg>*{min-width:0}
+@media(max-width:520px){.header{padding:10px 12px}.header h1{font-size:1.02rem}.header img{width:32px!important;height:32px!important}.hright{gap:4px}.sel{padding:5px 6px;font-size:.75rem;max-width:92px}.nb{padding:10px 11px;font-size:.72rem}.perfil-bar{padding:7px 10px}.pchip{padding:5px 8px;font-size:.68rem}.sec{padding-top:11px;padding-bottom:10px}.cards{gap:7px}.card{padding:12px 6px}.ci{font-size:1.18rem}.cv{font-size:.9rem}.cl{font-size:.58rem;letter-spacing:.4px}.box{padding:11px;border-radius:10px}.fg{grid-template-columns:1fr}.s2{grid-column:auto}.fg input,.fg select,.fg textarea,.cfg-inp{font-size:16px!important;min-height:42px}.pag-resumo{grid-template-columns:1fr}.item-desc{font-size:.78rem}.item-val{font-size:.8rem}.notif{left:10px;right:10px;transform:none;text-align:center;white-space:normal;max-width:none}.bot{min-height:64px}.bb{padding:7px 2px 6px;font-size:.55rem}.bb span:first-child{font-size:1.05rem}.segmented button{min-width:calc(50% - 4px);font-size:.75rem}.cfg-inp{width:120px}.exc{max-width:100%;overflow-x:auto}}
+@media(max-width:360px){.cards{gap:5px}.card{padding:10px 3px}.cv{font-size:.82rem}.cl{font-size:.53rem}.nb{padding-left:9px;padding-right:9px}}
 
 /* HEADER */
 .header{background:linear-gradient(90deg,#e94560,#0f3460);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(233,69,96,.4)}

@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#e94560">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -16,6 +16,10 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);min-height:100vh;color:#e0e0e0;padding-bottom:75px}
+/* RESPONSIVO ANDROID */
+html{width:100%;min-width:0;overflow-x:hidden} body{width:100%;overflow-x:hidden;padding-bottom:calc(78px + env(safe-area-inset-bottom));touch-action:manipulation}.sec{width:100%;max-width:800px;padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
+@media(max-width:520px){.header{padding:10px 12px}.header h1{font-size:.95rem}.nav .nb{padding:10px 10px;font-size:.7rem}.sec{padding-top:11px;padding-bottom:10px}.cards{gap:7px}.card{padding:11px 5px}.cv{font-size:.84rem}.cl{font-size:.55rem}.box{padding:11px}.fg{grid-template-columns:1fr}.s2{grid-column:auto}.fg input,.fg select,.fg textarea{font-size:16px!important;min-height:42px}.divida-header{align-items:flex-start}.divida-nome{font-size:.86rem}.divida-valores{grid-template-columns:1fr 1fr}.proposta-grid{grid-template-columns:1fr 1fr}.parcela-item{gap:5px;flex-wrap:wrap}.notif{left:10px;right:10px;white-space:normal;text-align:center;transform:none}.bot{min-height:64px}.bb{padding:7px 2px 6px;font-size:.55rem}.bb span:first-child{font-size:1.05rem}}
+@media(max-width:360px){.cards{gap:5px}.card{padding:9px 3px}.divida-valores{gap:5px}.dv-val{font-size:.78rem}}
 
 .header{background:linear-gradient(90deg,#e94560,#0f3460);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(233,69,96,.4)}
 .header h1{font-size:1.1rem;color:white;display:flex;align-items:center;gap:8px}
@@ -256,6 +260,8 @@ body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#1a1a2e
     <div id="resumo-credor"></div>
   </div>
 
+  <div class="box"><div class="bt">🏗️ Ecovic — parcelas e evolução de obra</div><div id="resumo-ecovic"></div></div>
+
   <!-- PRÓXIMAS PARCELAS -->
   <div class="box">
     <div class="bt">📅 Próximos Vencimentos</div>
@@ -474,7 +480,9 @@ let bd={
   propostas:[],
   scores:[],
   parcelasPagas:{},  // chave: "dividaId-propostaId-numParcela"
-  checklist:{}
+  checklist:{},
+  ecovic:[],
+  simulacoes:[]
 };
 
 let filDiv='todos';
@@ -538,14 +546,17 @@ function carregarBD(){
     bd.scores=s.scores||[];
     bd.parcelasPagas=s.parcelasPagas||{};
     bd.checklist=s.checklist||{};
+    bd.ecovic=s.ecovic||[];
+    bd.simulacoes=s.simulacoes||[];
   }
 }
 function importarDividasExcel(){
-  if(localStorage.getItem('ff_dividas_excel_v1')==='1'||bd.dividas.length)return;
+  if(localStorage.getItem('ff_dividas_excel_v2')==='1')return;
   fetch('./excel_seed.json').then(r=>r.ok?r.json():Promise.reject()).then(seed=>{
-    bd.dividas=(seed.dividas||[]).map(d=>({...d,status:'negociando',tipo:'serasa',vencOriginal:'',diasAtraso:0,obs:'Importada da planilha Controle_Dividas_Apresentacao.xlsx',ts:Date.now()}));
-    localStorage.setItem('ff_dividas_excel_v1','1');
-    salvarBD();renderTudo();notif('📥 Dívidas do Excel importadas!','info');
+    if(!bd.dividas.length) bd.dividas=(seed.dividas||[]).map(d=>({...d,status:'negociando',tipo:'serasa',vencOriginal:'',diasAtraso:0,obs:'Importada da planilha Planejamento_Quitacao_Dividas_11_10_26.xlsx',ts:Date.now()}));
+    bd.ecovic=seed.ecovic||[]; bd.simulacoes=seed.simulacoes||[];
+    localStorage.setItem('ff_dividas_excel_v2','1');
+    salvarBD();renderTudo();notif(`📥 ${bd.dividas.length} dívidas e ${bd.ecovic.length} compromissos Ecovic importados!`,'info');
   }).catch(()=>console.warn('Seed do Excel indisponível para o módulo de dívidas.'));
 }
 
@@ -816,6 +827,9 @@ function renderResumo(){
         </div>`).join('')
       :'<div class="vazio">Nenhuma dívida cadastrada</div>';
   }
+
+  const ecEl=document.getElementById('resumo-ecovic');
+  if(ecEl){ const totalEco=(bd.ecovic||[]).reduce((a,x)=>a+Number(x.valor||0),0); ecEl.innerHTML=`<div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:.8rem"><span>🏗️ ${ (bd.ecovic||[]).length } compromissos importados</span><strong>R$ ${fmt(totalEco)}</strong></div><div style="font-size:.72rem;color:rgba(255,255,255,.45);margin-top:5px">Cronograma de parcelas e evolução de obra da planilha.</div>`; }
 
   // Próximos vencimentos
   renderProxVenc();

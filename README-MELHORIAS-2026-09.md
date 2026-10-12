@@ -54,3 +54,9 @@ A biblioteca `vendor/jspdf.umd.min.js` está incluída no projeto para que o PDF
 ## Logo
 
 O logo foi substituído pela imagem enviada pelo usuário, com a mensagem “Deus guia meus passos, e eu planejo o meu futuro”. A imagem foi convertida para `icons/apple-touch-icon.png`, `icons/icon-192.png`, `icons/icon-512.png`, favicons e `logo-financas-familia.png`, para funcionar no cabeçalho, no navegador e no atalho do celular.
+
+## Atualização de 12/10/2026
+
+Foi integrada a planilha `Planejamento_Quitacao_Dividas_11_10_26.xlsx`, com 62 recebíveis do terreno, 5 dívidas do Serasa, 22 compromissos Ecovic e 3 cenários de simulação de empréstimo. O resumo da dívida agora usa os valores com desconto da nova planilha.
+
+Também foi corrigido o layout para Android: a página ocupa a largura real do aparelho, os formulários ficam mais fáceis de tocar, os cards se reorganizam em telas pequenas e o espaço seguro do celular é respeitado. O cache do PWA foi atualizado para baixar essa versão nova.

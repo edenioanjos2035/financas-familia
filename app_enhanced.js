@@ -41,7 +41,10 @@ let bd = {
   metas: [],
   pagamentos: {}, // "itemId-ano-mes" -> {pago: true, dataPag: string, valorPago: number}
   recebiveis: [],
-  dividas: []
+  dividas: [],
+  ecovic: [],
+  simulacoes: [],
+  planejamento: {}
 };
 
 let cfg = {
@@ -156,6 +159,9 @@ function carregarTudo() {
       bd.pagamentos = s.pagamentos || {};
       bd.recebiveis = s.recebiveis || [];
       bd.dividas = s.dividas || [];
+      bd.ecovic = s.ecovic || [];
+      bd.simulacoes = s.simulacoes || [];
+      bd.planejamento = s.planejamento || {};
     } catch (e) {
       console.error('Erro ao ler banco de dados:', e);
     }
@@ -1178,15 +1184,19 @@ function renderCfgOrc() {
 //  EXCEL: DÍVIDAS E RECEBÍVEIS DO TERRENO
 // ══════════════════════════════════════════════
 function importarDadosExcelUmaVez() {
-  if (localStorage.getItem('ff_excel_seed_v1') === '1') return;
+  if (localStorage.getItem('ff_excel_seed_v2') === '1') return;
   fetch('./excel_seed.json')
     .then(r => r.ok ? r.json() : Promise.reject(new Error('seed não encontrado')))
     .then(seed => {
-      bd.recebiveis = (seed.recebiveis || []).map(r => ({ ...r, excel: true, tipo: 'receita' }));
-      bd.dividas = seed.dividas || [];
-      localStorage.setItem('ff_excel_seed_v1', '1');
+      const merge = (anteriores, novos) => { const mapa = new Map((anteriores || []).map(x => [x.id, x])); return (novos || []).map(x => ({ ...x, ...mapa.get(x.id), excel: true })); };
+      bd.recebiveis = [...(bd.recebiveis || []).filter(r => !r.excel), ...merge(bd.recebiveis, seed.recebiveis).map(r => ({ ...r, tipo: 'receita' }))];
+      bd.dividas = [...(bd.dividas || []).filter(d => !String(d.origem || '').includes('Excel')), ...(seed.dividas || [])];
+      bd.ecovic = seed.ecovic || [];
+      bd.simulacoes = seed.simulacoes || [];
+      bd.planejamento = seed.resumo || {};
+      localStorage.setItem('ff_excel_seed_v2', '1');
       salvarBD(); renderTudo();
-      notif(`📥 ${bd.recebiveis.length} recebíveis e ${bd.dividas.length} dívidas importados do Excel`, 'info');
+      notif(`📥 ${bd.recebiveis.length} recebíveis, ${bd.dividas.length} dívidas e ${bd.ecovic.length} compromissos Ecovic importados`, 'info');
     })
     .catch(() => console.warn('Importação automática do Excel indisponível neste modo de abertura.'));
 }
@@ -1207,7 +1217,7 @@ function renderRecebiveisResumo() {
     <div class="pag-card"><div class="pl">Total previsto</div><div class="pv vp">R$ ${fmt(total)}</div></div>
     <div class="pag-card"><div class="pl">Recebido</div><div class="pv vp">R$ ${fmt(pagos)}</div></div>
     <div class="pag-card"><div class="pl">Em aberto</div><div class="pv" style="color:#ffd200">R$ ${fmt(total - pagos)}</div></div>
-  </div><div style="font-size:.78rem;color:rgba(255,255,255,.65);margin-bottom:9px">💳 Dívidas importadas: ${dividas.length} · Valor com desconto informado: R$ ${fmt(dividaTotal)}</div>
+  </div><div style="font-size:.78rem;color:rgba(255,255,255,.65);margin-bottom:9px">💳 Dívidas Serasa: ${dividas.length} · Valor com desconto: R$ ${fmt(dividaTotal)} · 🏗️ Ecovic: ${((bd.ecovic || []).length)} lançamentos / R$ ${fmt((bd.ecovic || []).reduce((a,x)=>a+Number(x.valor||0),0))}</div>
   <div class="exc"><table><thead><tr><th>Recebível</th><th>Vencimento</th><th>Valor</th><th>Status</th></tr></thead><tbody>
   ${rs.slice(-12).map(r => `<tr><td>${r.desc}</td><td>${r.data}</td><td>R$ ${fmt(r.valor)}</td><td>${r.pago ? '✅ Recebido' : '⏳ Em aberto'}</td></tr>`).join('')}</tbody></table></div>`;
 }
@@ -1376,7 +1386,7 @@ function importar(e) {
 
 function limparTudo() {
   if (confirm('⚠️ ATENÇÃO: Deseja apagar TODOS os lançamentos e configurações?\nEssa ação não pode ser desfeita!')) {
-    bd = { receitas: [], despesas: [], fixos: [], metas: [], pagamentos: {}, recebiveis: [], dividas: [] };
+    bd = { receitas: [], despesas: [], fixos: [], metas: [], pagamentos: {}, recebiveis: [], dividas: [], ecovic: [], simulacoes: [], planejamento: {} };
     localStorage.removeItem('ff_excel_seed_v1');
     salvarBD();
     renderTudo();
