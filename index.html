@@ -606,7 +606,10 @@ let bd = {
   metas: [],
   pagamentos: {}, // "itemId-ano-mes" -> {pago: true, dataPag: string, valorPago: number}
   recebiveis: [],
-  dividas: []
+  dividas: [],
+  ecovic: [],
+  simulacoes: [],
+  planejamento: {}
 };
 
 let cfg = {
@@ -721,6 +724,9 @@ function carregarTudo() {
       bd.pagamentos = s.pagamentos || {};
       bd.recebiveis = s.recebiveis || [];
       bd.dividas = s.dividas || [];
+      bd.ecovic = s.ecovic || [];
+      bd.simulacoes = s.simulacoes || [];
+      bd.planejamento = s.planejamento || {};
     } catch (e) {
       console.error('Erro ao ler banco de dados:', e);
     }
@@ -1743,15 +1749,19 @@ function renderCfgOrc() {
 //  EXCEL: DÍVIDAS E RECEBÍVEIS DO TERRENO
 // ══════════════════════════════════════════════
 function importarDadosExcelUmaVez() {
-  if (localStorage.getItem('ff_excel_seed_v1') === '1') return;
+  if (localStorage.getItem('ff_excel_seed_v2') === '1') return;
   fetch('./excel_seed.json')
     .then(r => r.ok ? r.json() : Promise.reject(new Error('seed não encontrado')))
     .then(seed => {
-      bd.recebiveis = (seed.recebiveis || []).map(r => ({ ...r, excel: true, tipo: 'receita' }));
-      bd.dividas = seed.dividas || [];
-      localStorage.setItem('ff_excel_seed_v1', '1');
+      const merge = (anteriores, novos) => { const mapa = new Map((anteriores || []).map(x => [x.id, x])); return (novos || []).map(x => ({ ...x, ...mapa.get(x.id), excel: true })); };
+      bd.recebiveis = [...(bd.recebiveis || []).filter(r => !r.excel), ...merge(bd.recebiveis, seed.recebiveis).map(r => ({ ...r, tipo: 'receita' }))];
+      bd.dividas = [...(bd.dividas || []).filter(d => !String(d.origem || '').includes('Excel')), ...(seed.dividas || [])];
+      bd.ecovic = seed.ecovic || [];
+      bd.simulacoes = seed.simulacoes || [];
+      bd.planejamento = seed.resumo || {};
+      localStorage.setItem('ff_excel_seed_v2', '1');
       salvarBD(); renderTudo();
-      notif(`📥 ${bd.recebiveis.length} recebíveis e ${bd.dividas.length} dívidas importados do Excel`, 'info');
+      notif(`📥 ${bd.recebiveis.length} recebíveis, ${bd.dividas.length} dívidas e ${bd.ecovic.length} compromissos Ecovic importados`, 'info');
     })
     .catch(() => console.warn('Importação automática do Excel indisponível neste modo de abertura.'));
 }
@@ -1772,7 +1782,7 @@ function renderRecebiveisResumo() {
     <div class="pag-card"><div class="pl">Total previsto</div><div class="pv vp">R$ ${fmt(total)}</div></div>
     <div class="pag-card"><div class="pl">Recebido</div><div class="pv vp">R$ ${fmt(pagos)}</div></div>
     <div class="pag-card"><div class="pl">Em aberto</div><div class="pv" style="color:#ffd200">R$ ${fmt(total - pagos)}</div></div>
-  </div><div style="font-size:.78rem;color:rgba(255,255,255,.65);margin-bottom:9px">💳 Dívidas importadas: ${dividas.length} · Valor com desconto informado: R$ ${fmt(dividaTotal)}</div>
+  </div><div style="font-size:.78rem;color:rgba(255,255,255,.65);margin-bottom:9px">💳 Dívidas Serasa: ${dividas.length} · Valor com desconto: R$ ${fmt(dividaTotal)} · 🏗️ Ecovic: ${((bd.ecovic || []).length)} lançamentos / R$ ${fmt((bd.ecovic || []).reduce((a,x)=>a+Number(x.valor||0),0))}</div>
   <div class="exc"><table><thead><tr><th>Recebível</th><th>Vencimento</th><th>Valor</th><th>Status</th></tr></thead><tbody>
   ${rs.slice(-12).map(r => `<tr><td>${r.desc}</td><td>${r.data}</td><td>R$ ${fmt(r.valor)}</td><td>${r.pago ? '✅ Recebido' : '⏳ Em aberto'}</td></tr>`).join('')}</tbody></table></div>`;
 }
@@ -1825,13 +1835,14 @@ function baixarRelatorioPDF() {
   const reais = n => 'R$ ' + Number(n || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
   const linha = (texto, tamanho = 9, cor = [31,41,55]) => { doc.setFontSize(tamanho); doc.setTextColor(...cor); const ls = doc.splitTextToSize(String(texto), 182); if (y + ls.length * 5 > 282) { doc.addPage(); y = 16; } doc.text(ls, margem, y); y += ls.length * 5; };
   const titulo = texto => { y += 3; linha(texto, 13, [37,99,235]); y += 2; };
-  const rs = bd.recebiveis || [], despesas = bd.despesas || [];
-  const totalRec = rs.reduce((s,r) => s + Number(r.valor||0), 0), recebido = rs.filter(r=>r.pago).reduce((s,r)=>s+Number(r.valor||0),0), totalDesp = despesas.reduce((s,d)=>s+Number(d.valor||0),0);
+  const rs = bd.recebiveis || [], despesas = bd.despesas || [], fixas = bd.fixos.filter(f => f.tipo === 'despesa');
+  const totalRec = rs.reduce((s,r) => s + Number(r.valor||0), 0), recebido = rs.filter(r=>r.pago).reduce((s,r)=>s+Number(r.valor||0),0), totalDesp = despesas.reduce((s,d)=>s+Number(d.valor||0),0) + fixas.reduce((s,d)=>s+Number(d.valor||0),0);
   doc.setFillColor(37,99,235); doc.rect(0,0,210,10,'F');
   linha('Finanças Família — Relatório completo', 16, [37,99,235]); linha(`Gerado em ${new Date().toLocaleString('pt-BR')}`, 8, [100,116,139]);
   titulo('Resumo financeiro'); linha(`Recebíveis previstos: ${reais(totalRec)} | Recebido: ${reais(recebido)} | Em aberto: ${reais(totalRec-recebido)}`); linha(`Despesas manuais registradas: ${reais(totalDesp)}`);
   titulo('Recebíveis do terreno'); rs.forEach(r => linha(`${r.data} — ${r.desc} — ${reais(r.valor)} — ${r.pago ? 'Recebido' : 'Em aberto'}`, 8));
-  titulo('Despesas registradas'); if (!despesas.length) linha('Nenhuma despesa manual registrada.', 9, [100,116,139]); despesas.forEach(d => linha(`${d.data||'—'} — ${d.desc} — ${reais(d.valor)} — ${CDESP[d.cat]||d.cat||'Sem categoria'} — ${nomeMem(d.membro)}`, 8));
+  titulo('Despesas registradas'); if (!despesas.length && !fixas.length) linha('Nenhuma despesa registrada.', 9, [100,116,139]); despesas.forEach(d => linha(`${d.data||'—'} — ${d.desc} — ${reais(d.valor)} — ${CDESP[d.cat]||d.cat||'Sem categoria'} — ${nomeMem(d.membro)}`, 8));
+  fixas.forEach(d => linha(`Fixa mensal — ${d.desc} — ${reais(d.valor)} — ${CDESP[d.cat]||d.cat||'Sem categoria'} — ${nomeMem(d.membro)}`, 8));
   titulo('Dívidas importadas da planilha'); (bd.dividas||[]).forEach(d => linha(`${d.nome} — Valor com desconto: ${reais(d.valorAtual)} — À vista informado: ${reais(d.valorAtual)}`, 8));
   linha('Observação: os valores foram importados da planilha Controle_Dividas_Apresentacao.xlsx e devem ser conferidos antes de decisões financeiras.', 8, [100,116,139]);
   doc.save(`relatorio-financas-familia-${new Date().toISOString().slice(0,10)}.pdf`); notif('📄 Relatório PDF baixado.', 'ok');
@@ -1940,7 +1951,7 @@ function importar(e) {
 
 function limparTudo() {
   if (confirm('⚠️ ATENÇÃO: Deseja apagar TODOS os lançamentos e configurações?\nEssa ação não pode ser desfeita!')) {
-    bd = { receitas: [], despesas: [], fixos: [], metas: [], pagamentos: {}, recebiveis: [], dividas: [] };
+    bd = { receitas: [], despesas: [], fixos: [], metas: [], pagamentos: {}, recebiveis: [], dividas: [], ecovic: [], simulacoes: [], planejamento: {} };
     localStorage.removeItem('ff_excel_seed_v1');
     salvarBD();
     renderTudo();
